@@ -291,7 +291,7 @@ public class GatheringListFragment extends SherlockListFragment {
 			case FILLDATA_GET_NEXT_SET:
 
 				List<Gathering> newOffers = new ArrayList<Gathering>();
-				newOffers = ApplicationWebService.Gatherings.fetchRecordsWithinRange(activity, currentLatLng, dbCurrentRow);
+				newOffers = ApplicationWebService.Gatherings.fetchRecords(activity, dbCurrentRow);
 
 				if (newOffers != null && newOffers.size() > 0) {
 					items.addAll(newOffers);
@@ -317,7 +317,7 @@ public class GatheringListFragment extends SherlockListFragment {
 					@Override
 					public void run() {
 						// Webservice calls are done here
-						items = ApplicationWebService.Gatherings.fetchRecordsWithinRange(activity, currentLatLng, dbCurrentRow);
+						items = ApplicationWebService.Gatherings.fetchRecords(activity, dbCurrentRow);
 						dbCurrentRow += DB_ROW_LIMIT;
 
 						if (items == null || items.size() == 0) {

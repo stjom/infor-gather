@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 import us.feras.ecogallery.EcoGallery;
 import us.feras.ecogallery.EcoGalleryAdapterView;
@@ -75,6 +75,8 @@ public class GatheringWriteActivity extends SherlockActivity {
 
 	private LatLng currentLatLng;
 	private String currentLocationText;
+
+	final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.ENGLISH);
 
 	private static final int LOCATION_PICKER_REQUEST_CODE = 10;
 	public static final int NEW_OFFER_REQUEST_CODE = 10001;
@@ -147,21 +149,24 @@ public class GatheringWriteActivity extends SherlockActivity {
 
 		title = (EditText) findViewById(R.id.title);
 		subtitle = (EditText) findViewById(R.id.subtitle);
-		//		price = (EditText) findViewById(R.id.eventmaster);
+		organizer = (TextView) findViewById(R.id.organizer);
+		eventmaster = (EditText) findViewById(R.id.eventmaster);
 		description = (EditText) findViewById(R.id.description);
+
+		Button from = (Button) findViewById(R.id.from);
+		Button to = (Button) findViewById(R.id.to);
+
+		locationtext = (TextView) findViewById(R.id.locationtext);
+
 		refurl = (EditText) findViewById(R.id.refurl);
 		yturl = (EditText) findViewById(R.id.yturl);
 		fb_url = (EditText) findViewById(R.id.fb_url);
 		gplus_url = (EditText) findViewById(R.id.gplus_url);
 		twtrurl = (EditText) findViewById(R.id.twtrurl);
-		eventmaster = (EditText) findViewById(R.id.eventmaster);
-		subtitle = (EditText) findViewById(R.id.mobile);
-		organizer = (TextView) findViewById(R.id.organizer);
-		locationtext = (TextView) findViewById(R.id.locationtext);
+
 		publishonsave = (CheckBox) findViewById(R.id.publishonsave);
 
-		final Button from = (Button) findViewById(R.id.from);
-
+		from.setText(df.format(currentFromTime));
 		from.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -169,7 +174,7 @@ public class GatheringWriteActivity extends SherlockActivity {
 				showDateTimePicker(DateTimePickerType.FROM);
 			}
 		});
-		final Button to = (Button) findViewById(R.id.to);
+		to.setText(df.format(currentToTime));
 		to.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -190,9 +195,6 @@ public class GatheringWriteActivity extends SherlockActivity {
 		fb_url.setText(currentUser.getFacebookURL());
 		twtrurl.setText(currentUser.getTwitterURL());
 		gplus_url.setText(currentUser.getGplusURL());
-
-		//		eventmaster.setText(currentUser.getLandline());
-		//		subtitle.setText(currentUser.getMobile());
 
 		if (currentLocationText != null && !currentLocationText.equals(LocationHelper.LOCATION_UNAVAILABLE)) {
 			locationtext.setText("near " + currentLocationText == null ? "Anywhere" : currentLocationText);
@@ -249,8 +251,10 @@ public class GatheringWriteActivity extends SherlockActivity {
 		DecimalFormat df = new DecimalFormat("###0.00");
 
 		title.setText(currentGathering.getTitle());
+		subtitle.setText(currentGathering.getSubtitle());
+		eventmaster.setText(currentGathering.getEventmaster());
 		description.setText(currentGathering.getDescription());
-		organizer.setText(currentGathering.getEventMaster());
+		organizer.setText(currentGathering.getOrganizer());
 		locationtext.setText(currentGathering.getLoc_text());
 
 		refurl.setText(currentGathering.getRef_url());
@@ -320,11 +324,6 @@ public class GatheringWriteActivity extends SherlockActivity {
 			errMsg.append("- Title should not be left blank.").append("\n");
 		}
 
-		//		if (price.getText().toString() == null || price.getText().toString().length() == 0) {
-		//			hasValidationErrors = true;
-		//			errMsg.append("- Price should not be left blank.").append("\n");
-		//		}
-
 		if (description.getText().toString() == null || description.getText().toString().length() == 0) {
 			hasValidationErrors = true;
 			errMsg.append("- Description should not be left blank.").append("\n");
@@ -390,15 +389,24 @@ public class GatheringWriteActivity extends SherlockActivity {
 					}
 
 					currentGathering.setTitle(title.getText().toString());
+					currentGathering.setSubtitle(subtitle.getText().toString());
+					currentGathering.setEventmaster(eventmaster.getText().toString());
 					currentGathering.setDescription(description.getText().toString());
+
+					currentGathering.setDatefrom(currentFromTime);
+					currentGathering.setDateto(currentToTime);
+
+					currentGathering.setTranscript("");
+
+					currentGathering.setLoc_text(locationtext.getText().toString());
+					currentGathering.setLoc_lat(currentLatLng.latitude);
+					currentGathering.setLoc_lng(currentLatLng.longitude);
+
 					currentGathering.setRef_url(refurl.getText().toString());
 					currentGathering.setYoutube_url(yturl.getText().toString());
 					currentGathering.setFacebook_url(fb_url.getText().toString());
 					currentGathering.setTwitter_url(twtrurl.getText().toString());
 					currentGathering.setGplus_url(gplus_url.getText().toString());
-					currentGathering.setLoc_text(locationtext.getText().toString());
-					currentGathering.setLoc_lat(currentLatLng.latitude);
-					currentGathering.setLoc_lng(currentLatLng.longitude);
 
 					if (publishonsave.isChecked()) {
 						currentGathering.setStatus(Gathering.STATUS_PUBLISHED);
@@ -407,7 +415,10 @@ public class GatheringWriteActivity extends SherlockActivity {
 					}
 
 					String[] chips = ch.getText().toString().trim().split(",");
-					List<String> tags = new ArrayList<String>(Arrays.asList(chips));
+					//					List<String> tags = new ArrayList<String>(Arrays.asList(chips));
+					List<String> tags = new ArrayList<String>();
+					String titleTag = WordUtils.capitalize(title.getText().toString());
+					tags.add(titleTag.replace(" ", ""));
 
 					if (images != null) {
 						currentGathering.setImagesList(images);
@@ -419,7 +430,7 @@ public class GatheringWriteActivity extends SherlockActivity {
 
 					User currentUser = appMain.getCurrentUser();
 
-					currentGathering.setEventMaster(currentUser.getTradeName());
+					currentGathering.setOrganizer(currentUser.getTradeName());
 					currentGathering.setEdited_by(currentUser.getId());
 					currentGathering.setUpdated(Calendar.getInstance().getTimeInMillis());
 
@@ -431,7 +442,7 @@ public class GatheringWriteActivity extends SherlockActivity {
 								pd.dismiss();
 								AlertDialog.Builder alert = new AlertDialog.Builder(GatheringWriteActivity.this);
 								alert.setTitle("Successful");
-								alert.setMessage("Offer successfully saved!");
+								alert.setMessage("Gathering successfully saved!");
 								alert.setCancelable(false);
 								alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int which) {
@@ -776,7 +787,6 @@ public class GatheringWriteActivity extends SherlockActivity {
 	private void showDateTimePicker(final DateTimePickerType type) {
 		final Calendar selectedDateTime = Calendar.getInstance();
 		final Calendar c = Calendar.getInstance();
-		final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.ENGLISH);
 		final Dialog dialog = new Dialog(GatheringWriteActivity.this);
 
 		dialog.setContentView(R.layout.datetime_picker);

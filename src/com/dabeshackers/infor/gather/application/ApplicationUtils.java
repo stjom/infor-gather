@@ -1,14 +1,13 @@
 package com.dabeshackers.infor.gather.application;
 
-
 import java.io.File;
-
-import com.dabeshackers.infor.gather.helpers.DeviceInfoHelper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+
+import com.dabeshackers.infor.gather.helpers.DeviceInfoHelper;
 
 public class ApplicationUtils {
 	public static String getPackageName(Context context) throws NullPointerException {
@@ -56,9 +55,9 @@ public class ApplicationUtils {
 	public static final String AUTHENTICATION_FAILED = "0";
 
 	public static final String HOME_URL = "http://codesndbx.com";
-	public static final String FTP_ROOT_IMAGES_URL = "/lokal/images/";
-	public static final String FTP_ROOT_TEMP_URL = "/lokal/temp/";
-	public static final String ACCOUNT_IMAGES_URL = HOME_URL + "/android/lokal/images/";
+	public static final String FTP_ROOT_IMAGES_URL = "/inforgather/images/";
+	public static final String FTP_ROOT_TEMP_URL = "/inforgather/temp/";
+	public static final String ACCOUNT_IMAGES_URL = HOME_URL + "/android/inforgather/images/";
 
 	public static final int BROADCAST_REQUEST_CODE = 192837;
 

@@ -88,7 +88,7 @@
     <string name="menulbl_attachitem">Attach Item</string>
     <string name="menulbl_locationpicker">Pick Location</string>
     <string name="menulbl_proceed">Proceed</string>
-    <string name="hint_price">Price</string>
+    <string name="hint_eventmaster">Contact Person</string>
     <string name="hint_title">Title</string>
     <string name="hint_subtitle">Subtitle</string>
     <string name="lbl_drawer_merchant">Manage your gatherings</string>

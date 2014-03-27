@@ -30,7 +30,6 @@ import com.dabeshackers.infor.gather.entities.User;
 import com.dabeshackers.infor.gather.helpers.BitmapHelper;
 import com.dabeshackers.infor.gather.helpers.FtpHelper;
 import com.dabeshackers.infor.gather.helpers.GoogleAPIsHelper.GCMResultObject;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
@@ -322,13 +321,22 @@ public class ApplicationWebService {
 			ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
 			postParameters.add(new BasicNameValuePair("id", record.getId()));
 			postParameters.add(new BasicNameValuePair("title", record.getTitle()));
-			postParameters.add(new BasicNameValuePair("merchant", record.getEventMaster()));
+			postParameters.add(new BasicNameValuePair("subtitle", record.getSubtitle()));
+			postParameters.add(new BasicNameValuePair("organizer", record.getOrganizer()));
+			postParameters.add(new BasicNameValuePair("eventmaster", record.getEventMaster()));
 			postParameters.add(new BasicNameValuePair("description", record.getDescription()));
+
+			postParameters.add(new BasicNameValuePair("datefrom", String.valueOf(record.getDatefrom())));
+			postParameters.add(new BasicNameValuePair("dateto", String.valueOf(record.getDateto())));
+
+			postParameters.add(new BasicNameValuePair("status", record.getStatus()));
+			postParameters.add(new BasicNameValuePair("transcript", record.getTranscript()));
+
 			postParameters.add(new BasicNameValuePair("loc_text", record.getLoc_text()));
 			postParameters.add(new BasicNameValuePair("loc_lat", String.valueOf(record.getLoc_lat())));
 			postParameters.add(new BasicNameValuePair("loc_lng", String.valueOf(record.getLoc_lng())));
-			postParameters.add(new BasicNameValuePair("biz_url", record.getRef_url()));
-			postParameters.add(new BasicNameValuePair("status", record.getStatus()));
+
+			postParameters.add(new BasicNameValuePair("ref_url", record.getRef_url()));
 			postParameters.add(new BasicNameValuePair("youtube_url", record.getYoutube_url()));
 			postParameters.add(new BasicNameValuePair("fb_url", record.getFacebook_url()));
 			postParameters.add(new BasicNameValuePair("gplus_url", record.getGplus_url()));
@@ -370,18 +378,12 @@ public class ApplicationWebService {
 
 		}
 
-		public static List<Gathering> fetchRecordsWithinRange(Context context, LatLng center, int dbCurrentRow) {
+		public static List<Gathering> fetchRecords(Context context, int dbCurrentRow) {
 
-			Log.d(TAG, "fetchRecordsWithinRange() method invoked!");
-			double radius = 5;
+			Log.d(TAG, "fetchRecords() method invoked!");
 			List<Gathering> items = new ArrayList<Gathering>();
 
-			// guard
-			if (center == null) {
-				return items;
-			}
-
-			String HTTP_POST_URL = WebServiceUrls.Gather.SELECT_WITHIN_RANGE + "?lat=" + Uri.encode(String.valueOf(center.latitude)) + "&lon=" + Uri.encode(String.valueOf(center.longitude), "UTF-8") + "&rad=" + Uri.encode(String.valueOf(radius)) + "&dbCurrentRow=" + dbCurrentRow;
+			String HTTP_POST_URL = WebServiceUrls.Gather.SELECT + "?dbCurrentRow=" + dbCurrentRow;
 			try {
 				InputStream responseDetail = CustomHttpClient.executeHttpGetForGson(HTTP_POST_URL);
 				Gson gsonDetail = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -484,7 +486,7 @@ public class ApplicationWebService {
 			Log.d(TAG, "fetchRecordsByOfferId() method invoked!");
 			List<com.dabeshackers.infor.gather.entities.Media> items = new ArrayList<com.dabeshackers.infor.gather.entities.Media>();
 
-			String HTTP_POST_URL = WebServiceUrls.Media.SELECT_BY_OFFER_ID + "?id=" + Uri.encode(String.valueOf(offer_id));
+			String HTTP_POST_URL = WebServiceUrls.Media.SELECT_BY_GATHERING_ID + "?id=" + Uri.encode(String.valueOf(offer_id));
 			try {
 				InputStream responseDetail = CustomHttpClient.executeHttpGetForGson(HTTP_POST_URL);
 				Gson gsonDetail = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -527,7 +529,7 @@ public class ApplicationWebService {
 		public static boolean clearRecordsByOfferId(Context context, String owner_id) {
 			Log.d(TAG, "clearRecordsByOfferId() method invoked!");
 
-			String HTTP_POST_URL = WebServiceUrls.Media.CLEAR_BY_OFFER_ID;
+			String HTTP_POST_URL = WebServiceUrls.Media.CLEAR_BY_GATHERING_ID;
 
 			ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
 			postParameters.add(new BasicNameValuePair("owner_id", owner_id));
@@ -558,7 +560,33 @@ public class ApplicationWebService {
 
 			ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
 			postParameters.add(new BasicNameValuePair("owner_id", owner_id));
-			postParameters.add(new BasicNameValuePair("name", name.toLowerCase()));
+			postParameters.add(new BasicNameValuePair("name", name));
+
+			String ret = "0";
+			try {
+				ret = CustomHttpClient.executeHttpPost(HTTP_POST_URL, postParameters).toString();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			if (ret.startsWith("-1")) {
+				return false;
+			} else {
+				//A VERY SPECIAL CASE: INSERT TAG TO INFOR DISCUSS BACKEND
+				pushRecordToInforDiscussBackEnd(context, name);
+				return true;
+
+			}
+
+		}
+
+		public static boolean pushRecordToInforDiscussBackEnd(Context context, String name) {
+			Log.d(TAG, "pushRecordToBackEnd() method invoked!");
+
+			String HTTP_POST_URL = WebServiceUrls.Tags.PUSH_RECORD_TO_INFOR_DISCUSS;
+
+			ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+			postParameters.add(new BasicNameValuePair("tag", name));
 
 			String ret = "0";
 			try {
@@ -578,7 +606,7 @@ public class ApplicationWebService {
 		public static boolean clearRecordsByOfferId(Context context, String owner_id) {
 			Log.d(TAG, "clearRecordsByOfferId() method invoked!");
 
-			String HTTP_POST_URL = WebServiceUrls.Tags.CLEAR_BY_OFFER_ID;
+			String HTTP_POST_URL = WebServiceUrls.Tags.CLEAR_BY_GATHERING_ID;
 
 			ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
 			postParameters.add(new BasicNameValuePair("owner_id", owner_id));
@@ -603,7 +631,7 @@ public class ApplicationWebService {
 			Log.d(TAG, "fetchRecordsByOfferId() method invoked!");
 			List<String> items = new ArrayList<String>();
 
-			String HTTP_POST_URL = WebServiceUrls.Tags.SELECT_BY_OFFER_ID + "?id=" + Uri.encode(String.valueOf(offer_id));
+			String HTTP_POST_URL = WebServiceUrls.Tags.SELECT_BY_GATHERING_ID + "?id=" + Uri.encode(String.valueOf(offer_id));
 			try {
 				InputStream responseDetail = CustomHttpClient.executeHttpGetForGson(HTTP_POST_URL);
 				Gson gsonDetail = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();

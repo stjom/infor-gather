@@ -37,7 +37,6 @@ public class Gathering implements Serializable, Cloneable {
 	private long dateto;
 
 	private String transcript;
-	private String tag;
 	private String status;
 
 	private String loc_text;
@@ -371,14 +370,6 @@ public class Gathering implements Serializable, Cloneable {
 
 	public void setTranscript(String transcript) {
 		this.transcript = transcript;
-	}
-
-	public String getTag() {
-		return tag;
-	}
-
-	public void setTag(String tag) {
-		this.tag = tag;
 	}
 
 	public List<Attendee> getAttendees() {

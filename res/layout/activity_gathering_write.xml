@@ -116,7 +116,7 @@
                 android:layout_marginBottom="3dip"
                 android:layout_marginLeft="16dip"
                 android:layout_marginRight="16dip"
-                
+                android:inputType="textCapWords"
                 android:hint="@string/hint_title"
                 android:paddingLeft="10dp"
                 android:selectAllOnFocus="true"
@@ -189,6 +189,7 @@
                     android:layout_height="wrap_content"
                     style="@android:style/Holo.Light.ButtonBar"
                     android:layout_alignParentLeft="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/date_from" />
 
                 <TextView
@@ -200,7 +201,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dip"
                     android:layout_marginRight="10dip"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
                 
                 <Button
                     android:id="@+id/to"
@@ -208,6 +209,7 @@
                     android:layout_height="wrap_content"
                     style="@android:style/Holo.Light.ButtonBar"
                     android:layout_toRightOf="@+id/tolabel"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/date_to" />
                 
             </RelativeLayout>
@@ -271,8 +273,7 @@
                 android:layout_marginBottom="16dip"
                 android:layout_marginLeft="16dip"
                 android:layout_marginRight="16dip"
-                android:hint="@string/hint_price"
-                android:inputType="numberDecimal"
+                android:hint="@string/hint_eventmaster"
                 android:paddingLeft="10dp"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
@@ -501,7 +502,8 @@
                 android:text="@string/label_tags"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/med_gray"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                android:visibility="gone" />
 
             <com.kpbird.chipsedittextlibrary.ChipsMultiAutoCompleteTextview
                 android:id="@+id/tags"
@@ -516,7 +518,8 @@
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/black"
-                android:textColorHint="@color/med_gray" >
+                android:textColorHint="@color/med_gray"
+                android:visibility="gone" >
             </com.kpbird.chipsedittextlibrary.ChipsMultiAutoCompleteTextview>
 
             <CheckBox
