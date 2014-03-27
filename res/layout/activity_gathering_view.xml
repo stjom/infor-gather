@@ -93,11 +93,18 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
-                <TabWidget
-                    android:id="@android:id/tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-                </TabWidget>
+                <HorizontalScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"
+                    android:scrollbars="none" >
+
+                    <TabWidget
+                        android:id="@android:id/tabs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" >
+                    </TabWidget>
+                </HorizontalScrollView>
 
                 <FrameLayout
                     android:id="@android:id/tabcontent"
@@ -130,19 +137,37 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:gravity="center_vertical"
-                                    android:text="Haircut Back-to-school promo"
+                                    android:text="Title"
                                     android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:textColor="@color/med_gray" />
+
+                                <TextView
+                                    android:id="@+id/subtitle"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:text="Subitle"
+                                    android:textAppearance="?android:attr/textAppearanceSmall"
                                     android:textColor="@color/med_gray" />
 
                                 <TextView
                                     android:id="@+id/organizer"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dip"
                                     android:gravity="left"
-                                    android:text="By: Reyes Haircutters"
+                                    android:text="Organized By: TLDV"
                                     android:textAppearance="?android:attr/textAppearanceSmall"
                                     android:textColor="@color/app_theme_label_color" />
+
+                                <TextView
+                                    android:id="@+id/eventmaster"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dip"
+                                    android:gravity="left"
+                                    android:text="Event Master: Nina Peralta"
+                                    android:textAppearance="?android:attr/textAppearanceSmall"
+                                    android:textColor="@color/med_gray" />
 
                                 <TextView
                                     android:id="@+id/description"
@@ -155,22 +180,12 @@
                                     android:textColor="@color/dark_gray" />
 
                                 <TextView
-                                    android:id="@+id/eventmaster"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dip"
-                                    android:gravity="left"
-                                    android:text="Specs"
-                                    android:textAppearance="?android:attr/textAppearanceSmall"
-                                    android:textColor="@color/dark_gray" />
-
-                                <TextView
                                     android:id="@+id/expiration"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="10dip"
                                     android:gravity="left"
-                                    android:text="Specs"
+                                    android:text="@string/date_from"
                                     android:textAppearance="?android:attr/textAppearanceSmall"
                                     android:textColor="@color/dark_gray" />
                             </LinearLayout>
@@ -305,54 +320,72 @@
                                         android:textAppearance="?android:attr/textAppearanceMedium"
                                         android:textColor="@color/med_gray" />
                                 </LinearLayout>
+                            </LinearLayout>
+                        </ScrollView>
+                    </FrameLayout>
 
-                                <LinearLayout
+                    <FrameLayout
+                        android:id="@+id/tab4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <ScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fillViewport="true"
+                            android:paddingBottom="10dip"
+                            android:paddingLeft="15dip"
+                            android:paddingRight="15dip"
+                            android:paddingTop="10dip" >
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical" >
+
+                                <Button
+                                    android:id="@+id/programme"
                                     android:layout_width="match_parent"
-                                    android:layout_height="30dip"
-                                    android:layout_marginBottom="6dip"
-                                    android:orientation="horizontal" >
-
-                                    <ImageView
-                                        android:layout_width="25dip"
-                                        android:layout_height="match_parent"
-                                        android:layout_marginRight="5dip"
-                                        android:scaleType="fitCenter"
-                                        android:src="@drawable/ic_line" />
-
-                                    <TextView
-                                        android:id="@+id/landline"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:autoLink="phone"
-                                        android:gravity="left"
-                                        android:text="029991234"
-                                        android:textAppearance="?android:attr/textAppearanceMedium"
-                                        android:textColor="@color/med_gray" />
-                                </LinearLayout>
-
-                                <LinearLayout
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="16dip"
+                                    android:layout_marginRight="16dip"
+                                    android:text="Edit Programme" />
+                                
+                                <ListView 
                                     android:layout_width="match_parent"
-                                    android:layout_height="30dip"
-                                    android:layout_marginBottom="6dip"
-                                    android:orientation="horizontal" >
+                                    android:layout_height="match_parent">
+                                    
+                                </ListView>
+                            </LinearLayout>
+                        </ScrollView>
+                    </FrameLayout>
 
-                                    <ImageView
-                                        android:layout_width="25dip"
-                                        android:layout_height="match_parent"
-                                        android:layout_marginRight="5dip"
-                                        android:scaleType="fitCenter"
-                                        android:src="@drawable/ic_mobile" />
+                    <FrameLayout
+                        android:id="@+id/tab5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
 
-                                    <TextView
-                                        android:id="@+id/mobile"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:autoLink="phone"
-                                        android:gravity="left"
-                                        android:text="09229991234"
-                                        android:textAppearance="?android:attr/textAppearanceMedium"
-                                        android:textColor="@color/med_gray" />
-                                </LinearLayout>
+                        <ScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fillViewport="true"
+                            android:paddingBottom="10dip"
+                            android:paddingLeft="15dip"
+                            android:paddingRight="15dip"
+                            android:paddingTop="10dip" >
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical" >
+
+                                <Button
+                                    android:id="@+id/reserve"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="16dip"
+                                    android:layout_marginRight="16dip"
+                                    android:text="Reserve a seat" />
                             </LinearLayout>
                         </ScrollView>
                     </FrameLayout>

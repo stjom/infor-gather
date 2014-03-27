@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -95,7 +94,7 @@ public class GatheringListFragment extends SherlockListFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		return inflater.inflate(R.layout.fragment_gatheringss_list, container, false);
+		return inflater.inflate(R.layout.fragment_gatherings_list, container, false);
 
 	}
 
@@ -392,18 +391,27 @@ public class GatheringListFragment extends SherlockListFragment {
 			final Button overflow = (Button) convertView.findViewById(R.id.overflow);
 			final ImageView media = (ImageView) convertView.findViewById(R.id.media);
 			final TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
-			final TextView txtPrice = (TextView) convertView.findViewById(R.id.eventmaster);
-			final TextView txtMerchant = (TextView) convertView.findViewById(R.id.organizer);
+			final TextView txtSubtitle = (TextView) convertView.findViewById(R.id.subtitle);
+			final TextView txtOrganizer = (TextView) convertView.findViewById(R.id.organizer);
 			final TextView txtContent = (TextView) convertView.findViewById(R.id.content);
 			final TextView txtAddress = (TextView) convertView.findViewById(R.id.address);
 			final TextView txtExpiration = (TextView) convertView.findViewById(R.id.expiration);
 
 			txtTitle.setText(item.getTitle());
-			txtMerchant.setText("By: " + item.getEventMaster());
+			txtSubtitle.setText(item.getSubtitle());
+			txtOrganizer.setText("Organized By: " + item.getOrganizer());
 			txtContent.setText(item.getDescription());
 			txtAddress.setText(item.getLoc_text());
 
-			txtExpiration.setText("Expires on: " + new SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH).format(item.getCreated() + (1000 * 60 * 60 * 24 * 3)));
+			txtExpiration.setText("Will start on: " + new SimpleDateFormat("MMMM dd, yyyy hh:mm a", Locale.ENGLISH).format(item.getDatefrom()));
+
+			if (currentUser.getId().equals(item.getEdited_by())) {
+				//Show overflow
+				overflow.setVisibility(View.VISIBLE);
+			} else {
+				//Hide overflow
+				overflow.setVisibility(View.GONE);
+			}
 
 			// Load image
 			if (item.getImagesList() != null && item.getImagesList().size() > 0) {
@@ -466,7 +474,7 @@ public class GatheringListFragment extends SherlockListFragment {
 
 			final PopupMenu popup = new PopupMenu(activity, overflow);
 			//set overflow options
-			popup.getMenuInflater().inflate(R.menu.activity_offer_list_merch_published, popup.getMenu());
+			popup.getMenuInflater().inflate(R.menu.activity_gathering_overflow_menu, popup.getMenu());
 			popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 				@Override
@@ -474,135 +482,9 @@ public class GatheringListFragment extends SherlockListFragment {
 					switch (menu.getItemId()) {
 
 					case R.id.menu_edit:
-						editOffer(item);
+						editGathering(item);
 
 						break;
-
-					case R.id.menu_unpublish:
-						//						ToastHelper.toast(activity, "Unpublishing Offer...", Toast.LENGTH_SHORT);
-						new Thread(new Runnable() {
-							@Override
-							public void run() {
-								try {
-									item.createSnapShot();
-									Gathering snapShot = item.getSnapShot();
-									snapShot.setStatus(Gathering.STATUS_DRAFT);
-									snapShot.setUpdated(Calendar.getInstance().getTimeInMillis());
-									snapShot.setVersion(snapShot.getVersion());
-									if (ApplicationWebService.Gatherings.updateStatus(activity, snapShot)) {
-										item.setStatus(Gathering.STATUS_DRAFT);
-										item.setUpdated(snapShot.getUpdated());
-										item.setVersion(snapShot.getVersion());
-
-										activity.runOnUiThread(new Runnable() {
-
-											@Override
-											public void run() {
-												AlertDialog.Builder alert = new AlertDialog.Builder(activity);
-												alert.setTitle("Successful");
-												alert.setCancelable(false);
-												alert.setMessage("The offer has been successfully moved to drafts.");
-												alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-													public void onClick(DialogInterface dialog, int which) {
-														items.remove(item);
-														adapter.notifyDataSetChanged();
-														publishedButtonClicked();
-													}
-												});
-												alert.setIcon(android.R.drawable.ic_dialog_info);
-												alert.show();
-											}
-
-										});
-									} else {
-										activity.runOnUiThread(new Runnable() {
-
-											@Override
-											public void run() {
-												AlertDialog.Builder alert = new AlertDialog.Builder(activity);
-												alert.setTitle("Failed");
-												alert.setMessage("Operation failed. Please try again later.");
-												alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-													public void onClick(DialogInterface dialog, int which) {
-
-													}
-												});
-												alert.setIcon(android.R.drawable.ic_dialog_alert);
-												alert.show();
-											}
-
-										});
-									}
-								} catch (CloneNotSupportedException e) {
-									e.printStackTrace();
-								}
-
-							}
-						}).start();
-						break;
-
-					//					case R.id.menu_publish:
-					//						new Thread(new Runnable() {
-					//							@Override
-					//							public void run() {
-					//								try {
-					//									item.createSnapShot();
-					//									Offer snapShot = item.getSnapShot();
-					//									snapShot.setStatus(Offer.OFFER_STATUS_PUBLISHED);
-					//									snapShot.setUpdated(Calendar.getInstance().getTimeInMillis());
-					//									snapShot.setVersion(snapShot.getVersion());
-					//									if (ApplicationWebService.Offers.updateStatus(activity, snapShot)) {
-					//										item.setStatus(Offer.OFFER_STATUS_PUBLISHED);
-					//										item.setUpdated(snapShot.getUpdated());
-					//										item.setVersion(snapShot.getVersion());
-					//
-					//										activity.runOnUiThread(new Runnable() {
-					//
-					//											@Override
-					//											public void run() {
-					//												AlertDialog.Builder alert = new AlertDialog.Builder(activity);
-					//												alert.setTitle("Successful");
-					//												alert.setCancelable(false);
-					//												alert.setMessage("The offer has been published successfully.");
-					//												alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-					//													public void onClick(DialogInterface dialog, int which) {
-					//														items.remove(item);
-					//														adapter.notifyDataSetChanged();
-					//														draftsButtonClicked();
-					//													}
-					//												});
-					//												alert.setIcon(android.R.drawable.ic_dialog_info);
-					//												alert.show();
-					//											}
-					//
-					//										});
-					//									} else {
-					//										activity.runOnUiThread(new Runnable() {
-					//
-					//											@Override
-					//											public void run() {
-					//												AlertDialog.Builder alert = new AlertDialog.Builder(activity);
-					//												alert.setTitle("Failed");
-					//												alert.setMessage("Operation failed. Please try again later.");
-					//												alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-					//													public void onClick(DialogInterface dialog, int which) {
-					//
-					//													}
-					//												});
-					//												alert.setIcon(android.R.drawable.ic_dialog_alert);
-					//												alert.show();
-					//											}
-					//
-					//										});
-					//									}
-					//								} catch (CloneNotSupportedException e) {
-					//									e.printStackTrace();
-					//								}
-					//
-					//							}
-					//						}).start();
-					//
-					//						break;
 
 					case R.id.menu_share:
 						boolean withImage = false;
@@ -614,7 +496,7 @@ public class GatheringListFragment extends SherlockListFragment {
 						}
 
 						final StringBuilder msg = new StringBuilder();
-						msg.append("Hey, I've come across this offer. Check it out!\n");
+						msg.append("Hey, I've come across this gathering. Check it out!\n");
 						msg.append(item.getTitle() + " by " + item.getEventMaster() + "\n");
 						msg.append(item.getDescription() + "\n");
 						msg.append("located at " + item.getLoc_text() + "\n");
@@ -704,7 +586,7 @@ public class GatheringListFragment extends SherlockListFragment {
 
 	}
 
-	private void editOffer(Gathering item) {
+	private void editGathering(Gathering item) {
 		Intent intent = new Intent(activity, GatheringWriteActivity.class);
 		intent.putExtra("item", item);
 		intent.putExtra("lat", currentLatLng.latitude);

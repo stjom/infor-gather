@@ -96,7 +96,7 @@
     <string name="hint_firstname">First Name</string>
     <string name="hint_lastname">Last Name</string>
     <string name="label_birthday">Birthday</string>
-    <string name="hint_tradename">e.g. Infor Gather, Inc.</string>
+    <string name="hint_tradename">e.g. Enrichment Team, TLDV, S3, etc.</string>
     <string name="label_address">Address</string>
     <string name="label_tags">Tags</string>
     <string name="hint_zipcode">Zip Code</string>
@@ -113,7 +113,7 @@
     <string name="hint_mobile">e.g. 0911 999 1234</string>
     <string name="label_email">Email</string>
     <string name="hint_email">someone@example.com</string>
-    <string name="label_tradename">Trade Name</string>
+    <string name="label_tradename">Team Name</string>
     <string name="label_website">Website</string>
     <string name="label_facebook">Facebook URL</string>
     <string name="label_gplus">Google+</string>

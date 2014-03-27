@@ -151,9 +151,9 @@ public class MainContainerActivity extends SherlockFragmentActivity {
 			public void onClick(View arg0) {
 				isUpdateProfileRequired = false;
 				Intent intent = new Intent(MainContainerActivity.this, EditUserActivity.class);
-				intent.putExtra("lat", currentLatLng.latitude);
-				intent.putExtra("lng", currentLatLng.longitude);
-				intent.putExtra("loc_text", currentLocationText);
+				//				intent.putExtra("lat", currentLatLng.latitude);
+				//				intent.putExtra("lng", currentLatLng.longitude);
+				//				intent.putExtra("loc_text", currentLocationText);
 				startActivityForResult(intent, EditUserActivity.REQUESTCODE);
 			}
 		});
@@ -164,9 +164,9 @@ public class MainContainerActivity extends SherlockFragmentActivity {
 			public void onClick(View arg0) {
 				isUpdateProfileRequired = false;
 				Intent intent = new Intent(MainContainerActivity.this, EditUserActivity.class);
-				intent.putExtra("lat", currentLatLng.latitude);
-				intent.putExtra("lng", currentLatLng.longitude);
-				intent.putExtra("loc_text", currentLocationText);
+				//				intent.putExtra("lat", currentLatLng.latitude);
+				//				intent.putExtra("lng", currentLatLng.longitude);
+				//				intent.putExtra("loc_text", currentLocationText);
 				startActivityForResult(intent, EditUserActivity.REQUESTCODE);
 			}
 		});
@@ -177,9 +177,9 @@ public class MainContainerActivity extends SherlockFragmentActivity {
 			public void onClick(View arg0) {
 				isUpdateProfileRequired = false;
 				Intent intent = new Intent(MainContainerActivity.this, EditUserActivity.class);
-				intent.putExtra("lat", currentLatLng.latitude);
-				intent.putExtra("lng", currentLatLng.longitude);
-				intent.putExtra("loc_text", currentLocationText);
+				//				intent.putExtra("lat", currentLatLng.latitude);
+				//				intent.putExtra("lng", currentLatLng.longitude);
+				//				intent.putExtra("loc_text", currentLocationText);
 				startActivityForResult(intent, EditUserActivity.REQUESTCODE);
 			}
 		});

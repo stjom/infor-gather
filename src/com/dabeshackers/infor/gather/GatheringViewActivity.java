@@ -25,12 +25,12 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.util.Linkify;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -38,8 +38,10 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dabeshackers.infor.gather.application.AppMain;
 import com.dabeshackers.infor.gather.entities.Gathering;
 import com.dabeshackers.infor.gather.entities.Media;
+import com.dabeshackers.infor.gather.entities.User;
 import com.dabeshackers.infor.gather.helpers.BitmapHelper;
 import com.dabeshackers.infor.gather.helpers.LocationHelper;
 import com.dabeshackers.infor.gather.helpers.ToastHelper;
@@ -50,17 +52,18 @@ import com.google.android.youtube.player.YouTubePlayerView;
 public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implements OnTabChangeListener, OnPageChangeListener {
 
 	TextView title;
+	TextView subtitle;
 	TextView description;
 	TextView expiration;
-	TextView merchant;
-	TextView price;
+	TextView organizer;
+	TextView eventmaster;
 
-	TextView biz_url;
+	TextView ref_url;
 	TextView fb_url;
 	TextView gplus_url;
 	TextView twtr_url;
-	TextView landline;
-	TextView mobile;
+
+	Button programme, reserve;
 
 	ImageView img, share, navigate;
 	EcoGallery ecoGallery;
@@ -76,6 +79,9 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 	List<Media> images;
 	ImageAdapter adapter;
 
+	AppMain appMain;
+	private User currentUser;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -83,40 +89,46 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 
 		setContentView(R.layout.activity_gathering_view);
 
+		appMain = (AppMain) getApplication();
+		currentUser = appMain.getCurrentUser();
+
 		if (getIntent().hasExtra("item")) {
 			item = (Gathering) getIntent().getExtras().getSerializable("item");
 			item.setContext(GatheringViewActivity.this);
 			item.processImagesList();
 
 			title = (TextView) findViewById(R.id.title);
-			merchant = (TextView) findViewById(R.id.organizer);
+			subtitle = (TextView) findViewById(R.id.subtitle);
+			organizer = (TextView) findViewById(R.id.organizer);
 			description = (TextView) findViewById(R.id.description);
-			price = (TextView) findViewById(R.id.eventmaster);
+			eventmaster = (TextView) findViewById(R.id.eventmaster);
 			expiration = (TextView) findViewById(R.id.expiration);
 			img = (ImageView) findViewById(R.id.img);
 
-			biz_url = (TextView) findViewById(R.id.biz_url);
+			ref_url = (TextView) findViewById(R.id.biz_url);
 			fb_url = (TextView) findViewById(R.id.fb_url);
 			gplus_url = (TextView) findViewById(R.id.gplus_url);
 			twtr_url = (TextView) findViewById(R.id.twtr_url);
-			landline = (TextView) findViewById(R.id.landline);
-			mobile = (TextView) findViewById(R.id.mobile);
+
+			programme = (Button) findViewById(R.id.programme);
+			reserve = (Button) findViewById(R.id.reserve);
 
 			title.setText(item.getTitle());
-			merchant.setText("By: " + item.getEventMaster());
+			organizer.setText("Organized By: " + item.getOrganizer());
+			eventmaster.setText("Event Master: " + item.getEventMaster());
 			description.setText(item.getDescription());
-			expiration.setText("Valid until: " + new SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH).format(item.getCreated() + (1000 * 60 * 60 * 24 * 3)));
+			expiration.setText("Starts on: " + new SimpleDateFormat("MMMM dd, yyyy hh:mm a", Locale.ENGLISH).format(item.getDatefrom()));
 
-			biz_url.setText(item.getRef_url());
+			ref_url.setText(item.getRef_url());
 			fb_url.setText(item.getFacebook_url());
 			gplus_url.setText(item.getGplus_url());
 			twtr_url.setText(item.getTwitter_url());
 
-			landline.setAutoLinkMask(Linkify.ALL);
-			mobile.setAutoLinkMask(Linkify.ALL);
-
-			//			Linkify.addLinks(landline, Linkify.ALL);
-			//			Linkify.addLinks(mobile, Linkify.ALL);
+			if (currentUser.getId().equals(item.getEdited_by())) {
+				programme.setVisibility(View.VISIBLE);
+			} else {
+				programme.setVisibility(View.GONE);
+			}
 
 			setupTabs();
 
@@ -266,6 +278,16 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 		spec.setIndicator("Web");
 		host.addTab(spec);
 
+		spec = host.newTabSpec("tab4");
+		spec.setContent(R.id.tab4);
+		spec.setIndicator("Programme");
+		host.addTab(spec);
+
+		spec = host.newTabSpec("tab5");
+		spec.setContent(R.id.tab5);
+		spec.setIndicator("Attendees");
+		host.addTab(spec);
+
 		// pager.setAdapter(new MyPagerAdapter(ViewOfferActivity.this));
 		pager.setOnPageChangeListener(this);
 		host.setOnTabChangedListener(this);
@@ -288,8 +310,12 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			pageNumber = 1;
 		} else if (tabId.equals("tab3")) {
 			pageNumber = 2;
-		} else {
+		} else if (tabId.equals("tab4")) {
 			pageNumber = 3;
+		} else if (tabId.equals("tab5")) {
+			pageNumber = 4;
+		} else {
+			pageNumber = 5;
 		}
 		pager.setCurrentItem(pageNumber);
 	}
@@ -328,7 +354,7 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 		}
 	}
 
-	private final String YOUTUBE_DEFAULT_ID = "wKJ9KzGQq0w";
+	private final String YOUTUBE_DEFAULT_ID = "0s7iKlAycfo";
 
 	@Override
 	public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {

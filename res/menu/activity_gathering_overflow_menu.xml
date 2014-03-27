@@ -8,17 +8,10 @@
         android:title="@string/menulbl_edit"/>
     
     <item
-        android:id="@+id/menu_unpublish"
-        android:icon="@drawable/ic_action_location"
-        android:textColor="@color/light_gray"
-        android:orderInCategory="200"
-        android:showAsAction="always"
-        android:title="@string/menulbl_unpublish"/>
-    <item
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_action_proceed_lite"
         android:textColor="@color/light_gray"
-        android:orderInCategory="300"
+        android:orderInCategory="200"
         android:showAsAction="always"
         android:title="@string/menulbl_share"/>
 

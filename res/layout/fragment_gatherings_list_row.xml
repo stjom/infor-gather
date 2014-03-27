@@ -29,12 +29,13 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dip"
     	android:layout_marginTop="15dip"
-        android:layout_marginBottom="8dip"
+        android:layout_marginBottom="4dip"
         android:layout_below="@+id/media"
         android:layout_toLeftOf="@+id/overflow"
-        android:text="Back-to-school Haircut"
+        android:text="TLDV LSR Orientation"
         android:textStyle="bold"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:singleLine="true"
         android:textColor="@color/med_gray" />
     
     <Button
@@ -43,23 +44,22 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/media"
-        android:layout_above="@+id/eventmaster"
+        android:layout_above="@+id/subtitle"
         android:layout_marginRight="20dip"
         android:layout_marginTop="15dip"
-        android:layout_marginBottom="8dip"
+        android:layout_marginBottom="4dip"
         android:background="@drawable/app_theme_list_overflow_button"
         android:visibility="gone" />
     
     <TextView
-        android:id="@+id/eventmaster"
+        android:id="@+id/subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dip"
     	android:layout_marginRight="20dip"
-        android:layout_marginBottom="8dip"
+        android:layout_marginBottom="4dip"
         android:layout_below="@+id/title"
-        android:text="Php45.00"
-        android:textStyle="bold"
+        android:text="This is the subtitle"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/med_gray" />
     
@@ -70,10 +70,9 @@
         android:layout_marginLeft="20dip"
     	android:layout_marginRight="20dip"
         android:layout_marginBottom="8dip"
-        android:layout_below="@+id/eventmaster"
-        android:text="By: Reyes Haircutters"
-        android:textStyle="bold"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_below="@+id/subtitle"
+        android:text="Organized By: TLDV"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/med_gray" />
     
     <TextView
@@ -114,7 +113,7 @@
         android:layout_below="@+id/address"
         android:layout_marginTop="3dip"
         android:layout_marginBottom="8dip"
-        android:text="Expires on January 1, 2014"
+        android:text="@string/date_from"
         android:textSize="10sp"
         android:textColor="@color/med_gray"
         android:typeface="sans" />

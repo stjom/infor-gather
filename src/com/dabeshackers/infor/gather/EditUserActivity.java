@@ -1,6 +1,5 @@
 package com.dabeshackers.infor.gather;
 
-
 import java.util.Calendar;
 
 import android.app.AlertDialog;
@@ -24,7 +23,6 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.dabeshackers.infor.gather.R;
 import com.dabeshackers.infor.gather.application.AppMain;
 import com.dabeshackers.infor.gather.entities.User;
 import com.dabeshackers.infor.gather.helpers.DateHelper;
@@ -36,7 +34,7 @@ public class EditUserActivity extends SherlockFragmentActivity {
 
 	//	private static final String TAG = EditUserActivity.class.getSimpleName();
 
-	public static final int REQUESTCODE = EditUserActivity.class.getSimpleName().hashCode();
+	public static final int REQUESTCODE = 7979;
 
 	Double lng = null;
 	Double lat = null;
@@ -177,7 +175,7 @@ public class EditUserActivity extends SherlockFragmentActivity {
 
 		if (tradeName.getText().toString() == null || tradeName.getText().toString().length() == 0) {
 			hasValidationErrors = true;
-			errMsg.append("- Trade Name should not be left blank.").append("\n");
+			errMsg.append("- Team Name should not be left blank.").append("\n");
 		}
 
 		if (hasValidationErrors) {
