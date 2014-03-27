@@ -1,0 +1,58 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <DatePicker
+            android:id="@+id/dt_p"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dip"
+        	android:layout_marginRight="16dip"
+            android:calendarViewShown="false" >
+        </DatePicker>
+
+        <TimePicker
+            android:id="@+id/tm_p"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dip"
+        	android:layout_marginRight="16dip" >
+        </TimePicker>
+
+        <LinearLayout
+            android:id="@+id/buttonbar"
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:weightSum="100" >
+
+            <Button
+                android:id="@+id/positive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                style="?android:attr/buttonBarButtonStyle"
+                android:text="@string/label_ok" />
+
+            <Button
+                android:id="@+id/negative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                style="?android:attr/buttonBarButtonStyle"
+                android:text="@string/label_cancel" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
