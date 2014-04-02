@@ -25,7 +25,9 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.dabeshackers.infor.gather.application.ApplicationUtils;
+import com.dabeshackers.infor.gather.entities.Attendee;
 import com.dabeshackers.infor.gather.entities.Gathering;
+import com.dabeshackers.infor.gather.entities.Schedule;
 import com.dabeshackers.infor.gather.entities.User;
 import com.dabeshackers.infor.gather.helpers.BitmapHelper;
 import com.dabeshackers.infor.gather.helpers.FtpHelper;
@@ -210,6 +212,167 @@ public class ApplicationWebService {
 			return record;
 		}
 
+	}
+
+	public static class Attendees {
+		private static final String TAG = Attendees.class.getSimpleName();
+
+		public static boolean pushRecordToBackEnd(Context context, Attendee record) {
+			Log.d(TAG, "pushOffer() method invoked!");
+
+			String HTTP_POST_URL = WebServiceUrls.Attendee.PUSH_RECORD;
+
+			ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+			postParameters.add(new BasicNameValuePair("id", record.getId()));
+			postParameters.add(new BasicNameValuePair("gathering_id", record.getGathering_id()));
+			postParameters.add(new BasicNameValuePair("email", record.getEmail()));
+			postParameters.add(new BasicNameValuePair("fullname", record.getFullname()));
+			postParameters.add(new BasicNameValuePair("status", record.getStatus()));
+			postParameters.add(new BasicNameValuePair("timeattended", String.valueOf(record.getTimeattended())));
+
+			postParameters.add(new BasicNameValuePair("edited_by", record.getEdited_by()));
+			postParameters.add(new BasicNameValuePair("created", String.valueOf(record.getCreated())));
+			postParameters.add(new BasicNameValuePair("updated", String.valueOf(record.getUpdated())));
+			postParameters.add(new BasicNameValuePair("version", String.valueOf(record.getVersion())));
+
+			String ret = "0";
+			try {
+				ret = CustomHttpClient.executeHttpPost(HTTP_POST_URL, postParameters).toString();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			if (ret.startsWith("-1")) {
+				return false;
+			} else {
+				return true;
+			}
+
+		}
+
+		public static List<Attendee> fetchRecordsByGatheringId(Context context, String user_id) {
+			Log.d(TAG, "fetchRecordsByGatheringId() method invoked!");
+			List<Attendee> items = new ArrayList<Attendee>();
+
+			String HTTP_POST_URL = WebServiceUrls.Attendee.SELECT_BY_GATHERING_ID + "?id=" + Uri.encode(String.valueOf(user_id));
+
+			try {
+				InputStream responseDetail = CustomHttpClient.executeHttpGetForGson(HTTP_POST_URL);
+				Gson gsonDetail = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+				JsonReader readerDetail = new JsonReader(new InputStreamReader(responseDetail, "UTF-8"));
+
+				readerDetail.beginArray();
+				while (readerDetail.hasNext()) {
+					Attendee item = gsonDetail.fromJson(readerDetail, Attendee.class);
+					items.add(item);
+				}
+				readerDetail.endArray();
+				readerDetail.close();
+
+			} catch (IOException e) {
+				//Ignore 
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return items;
+		}
+
+		public static boolean updateStatus(Context context, Attendee record) {
+			Log.d(TAG, "updateStatus() method invoked!");
+
+			String HTTP_POST_URL = WebServiceUrls.Attendee.UPDATE_STATUS;
+
+			ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+			postParameters.add(new BasicNameValuePair("id", record.getId()));
+			postParameters.add(new BasicNameValuePair("status", record.getStatus()));
+
+			postParameters.add(new BasicNameValuePair("edited_by", record.getEdited_by()));
+			postParameters.add(new BasicNameValuePair("created", String.valueOf(record.getCreated())));
+			postParameters.add(new BasicNameValuePair("updated", String.valueOf(record.getUpdated())));
+			postParameters.add(new BasicNameValuePair("version", String.valueOf(record.getVersion())));
+
+			String ret = "0";
+			try {
+				ret = CustomHttpClient.executeHttpPost(HTTP_POST_URL, postParameters).toString();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			if (ret.startsWith("-1")) {
+				return false;
+			} else {
+				return true;
+			}
+
+		}
+	}
+
+	public static class Schedules {
+		private static final String TAG = Schedules.class.getSimpleName();
+
+		public static boolean pushRecordToBackEnd(Context context, Schedule record) {
+			Log.d(TAG, "pushRecordToBackEnd() method invoked!");
+
+			String HTTP_POST_URL = WebServiceUrls.Schedule.PUSH_RECORD;
+
+			ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+			postParameters.add(new BasicNameValuePair("id", record.getId()));
+			postParameters.add(new BasicNameValuePair("gathering_id", record.getGathering_id()));
+			postParameters.add(new BasicNameValuePair("title", record.getTitle()));
+			postParameters.add(new BasicNameValuePair("venue", record.getVenue()));
+			postParameters.add(new BasicNameValuePair("host", record.getHost()));
+			postParameters.add(new BasicNameValuePair("timestart", String.valueOf(record.getTimestart())));
+			postParameters.add(new BasicNameValuePair("timeend", String.valueOf(record.getTimeend())));
+			postParameters.add(new BasicNameValuePair("duration", String.valueOf(record.getDuration())));
+
+			postParameters.add(new BasicNameValuePair("edited_by", record.getEdited_by()));
+			postParameters.add(new BasicNameValuePair("created", String.valueOf(record.getCreated())));
+			postParameters.add(new BasicNameValuePair("updated", String.valueOf(record.getUpdated())));
+			postParameters.add(new BasicNameValuePair("version", String.valueOf(record.getVersion())));
+
+			String ret = "0";
+			try {
+				ret = CustomHttpClient.executeHttpPost(HTTP_POST_URL, postParameters).toString();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			if (ret.startsWith("-1")) {
+				return false;
+			} else {
+				return true;
+			}
+
+		}
+
+		public static List<Schedule> fetchRecordsByGatheringId(Context context, String user_id) {
+			Log.d(TAG, "fetchRecordsByGatheringId() method invoked!");
+			List<Schedule> items = new ArrayList<Schedule>();
+
+			String HTTP_POST_URL = WebServiceUrls.Schedule.SELECT_BY_GATHERING_ID + "?id=" + Uri.encode(String.valueOf(user_id));
+
+			try {
+				InputStream responseDetail = CustomHttpClient.executeHttpGetForGson(HTTP_POST_URL);
+				Gson gsonDetail = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+				JsonReader readerDetail = new JsonReader(new InputStreamReader(responseDetail, "UTF-8"));
+
+				readerDetail.beginArray();
+				while (readerDetail.hasNext()) {
+					Schedule item = gsonDetail.fromJson(readerDetail, Schedule.class);
+					items.add(item);
+				}
+				readerDetail.endArray();
+				readerDetail.close();
+
+			} catch (IOException e) {
+				//Ignore 
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return items;
+		}
 	}
 
 	public static class Gatherings {

@@ -25,6 +25,8 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -126,6 +128,14 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 
 			if (currentUser.getId().equals(item.getEdited_by())) {
 				programme.setVisibility(View.VISIBLE);
+				programme.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(GatheringViewActivity.this, ScheduleWriteActivity.class);
+						startActivityForResult(intent, ScheduleWriteActivity.NEW_REQUEST_CODE);
+					}
+				});
 			} else {
 				programme.setVisibility(View.GONE);
 			}
@@ -422,6 +432,31 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			return 0;
 		}
 
+	}
+
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if (currentUser.getId().equals(item.getEdited_by())) {
+			android.view.MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.gathering_view, menu);
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+
+		case android.R.id.home:
+			this.finish();
+			return true;
+
+		case R.id.menu_qr:
+
+			break;
+
+		}
+		return true;
 	}
 
 }

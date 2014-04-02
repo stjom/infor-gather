@@ -3,13 +3,13 @@ package com.dabeshackers.infor.gather.entities;
 public class Schedule {
 
 	private String id;
-	private String event_id;
+	private String gathering_id;
 
 	private String title;
 	private String venue;
 	private String host;
-	private long timeStart;
-	private long timeEnd;
+	private long timestart;
+	private long timeend;
 	private double duration;
 
 	private String edited_by;
@@ -25,12 +25,12 @@ public class Schedule {
 		this.id = id;
 	}
 
-	public String getEvent_id() {
-		return event_id;
+	public String getGathering_id() {
+		return gathering_id;
 	}
 
-	public void setEvent_id(String event_id) {
-		this.event_id = event_id;
+	public void setGathering_id(String event_id) {
+		this.gathering_id = event_id;
 	}
 
 	public String getTitle() {
@@ -57,20 +57,20 @@ public class Schedule {
 		this.host = host;
 	}
 
-	public long getTimeStart() {
-		return timeStart;
+	public long getTimestart() {
+		return timestart;
 	}
 
-	public void setTimeStart(long timeStart) {
-		this.timeStart = timeStart;
+	public void setTimestart(long timeStart) {
+		this.timestart = timeStart;
 	}
 
-	public long getTimeEnd() {
-		return timeEnd;
+	public long getTimeend() {
+		return timeend;
 	}
 
-	public void setTimeEnd(long timeEnd) {
-		this.timeEnd = timeEnd;
+	public void setTimeend(long timeEnd) {
+		this.timeend = timeEnd;
 	}
 
 	public double getDuration() {

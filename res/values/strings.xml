@@ -87,6 +87,7 @@
     <string name="hint_description_edittext">Give more details about your gathering</string>
     <string name="menulbl_attachitem">Attach Item</string>
     <string name="menulbl_locationpicker">Pick Location</string>
+    <string name="menulbl_qr">Print QR Code</string>
     <string name="menulbl_proceed">Proceed</string>
     <string name="hint_eventmaster">Contact Person</string>
     <string name="hint_title">Title</string>

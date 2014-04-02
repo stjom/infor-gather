@@ -19,6 +19,17 @@ public class WebServiceUrls {
 		public static final String SELECT_BY_USER_ID_DRAFTS = "http://codesndbx.com/android/inforgather/gathering_select_by_user_id_drafts.php";
 	}
 
+	public static class Attendee {
+		public static final String PUSH_RECORD = "http://codesndbx.com/android/inforgather/attendee_write.php";
+		public static final String UPDATE_STATUS = "http://codesndbx.com/android/inforgather/attendee_update_status.php";
+		public static final String SELECT_BY_GATHERING_ID = "http://codesndbx.com/android/inforgather/attendee_select_by_gathering_id.php";
+	}
+
+	public static class Schedule {
+		public static final String PUSH_RECORD = "http://codesndbx.com/android/inforgather/schedule_write.php";
+		public static final String SELECT_BY_GATHERING_ID = "http://codesndbx.com/android/inforgather/schedule_select_by_gathering_id.php";
+	}
+
 	public static class Media {
 		public static final String PUSH_RECORD = "http://codesndbx.com/android/inforgather/media_insert_update.php";
 		public static final String SELECT_BY_GATHERING_ID = "http://codesndbx.com/android/inforgather/media_select_by_gathering_id.php";

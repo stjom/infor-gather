@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/app_theme_gradient_off_white"
+    android:orientation="vertical"
+    android:weightSum="100" >
+
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:layout_margin="16dip"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="100" >
+
+        <Button
+            android:id="@+id/btn0"
+            android:layout_width="0dip"
+            android:layout_height="50dip"
+            android:layout_margin="5dip"
+            android:layout_weight="50"
+            android:text="@string/proceed"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/app_theme_dark_gray" />
+
+        <Button
+            android:id="@+id/btn1"
+            android:layout_width="0dip"
+            android:layout_height="50dip"
+            android:layout_margin="5dip"
+            android:layout_weight="50"
+            android:text="@string/cancel"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/app_theme_dark_gray" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/header"
+        android:paddingTop="16dip"
+        android:fillViewport="true" >
+
+        <!-- Link to Registration Screen -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:text="What is it called?"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/med_gray"
+                android:textStyle="italic" />
+
+            <EditText
+                android:id="@+id/title"
+                android:layout_width="fill_parent"
+                android:layout_height="40dip"
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
+                android:hint="@string/hint_title"
+                android:inputType="textCapWords"
+                android:paddingLeft="10dp"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/black"
+                android:textColorHint="@color/med_gray" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:text="Where is it going to be?"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/med_gray"
+                android:textStyle="italic" />
+
+            <EditText
+                android:id="@+id/subtitle"
+                android:layout_width="fill_parent"
+                android:layout_height="40dip"
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
+                android:ems="10"
+                android:hint="Venue"
+                android:paddingLeft="10dp"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/black"
+                android:textColorHint="@color/med_gray" >
+            </EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:text="Who will be the host?"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/med_gray"
+                android:textStyle="italic" />
+
+            <EditText
+                android:id="@+id/host"
+                android:layout_width="fill_parent"
+                android:layout_height="40dip"
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
+                android:ems="10"
+                android:hint="Host"
+                android:paddingLeft="10dp"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/black"
+                android:textColorHint="@color/med_gray" >
+
+            </EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:text="When is it?"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/med_gray"
+                android:textStyle="italic" />
+
+            <RelativeLayout
+                style="@android:style/Holo.Light.ButtonBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip" >
+
+                <Button
+                    android:id="@+id/from"
+                    style="@android:style/Holo.Light.ButtonBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/date_from"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:id="@+id/tolabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginRight="10dip"
+                    android:layout_toRightOf="@+id/from"
+                    android:text="@string/label_to"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <Button
+                    android:id="@+id/to"
+                    style="@android:style/Holo.Light.ButtonBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tolabel"
+                    android:text="@string/date_to"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
