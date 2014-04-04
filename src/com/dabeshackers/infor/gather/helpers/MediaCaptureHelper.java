@@ -1,12 +1,9 @@
 package com.dabeshackers.infor.gather.helpers;
 
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import com.dabeshackers.infor.gather.application.ApplicationUtils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,15 +12,18 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.dabeshackers.infor.gather.application.ApplicationUtils;
+
 public class MediaCaptureHelper {
-	
+
 	private static final String TAG = MediaCaptureHelper.class.getSimpleName();
 
 	// Activity request codes
 	public static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
 	public static final int CAMERA_CAPTURE_VIDEO_REQUEST_CODE = 200;
 	public static final int GALLERY_PICK_IMAGE_REQUEST_CODE = 300;
-	
+	public static final int ANY_PICK_IMAGE_REQUEST_CODE = 400;
+
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
 
@@ -35,40 +35,54 @@ public class MediaCaptureHelper {
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
 
 		// start the image capture Intent
-		((Activity)context).startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
-		
-		return fileUri;
-	}
-	
-	public static void recordVideo(Context context, Uri fileUri) {
-	    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-	 
-	    fileUri = getOutputMediaFileUri(context, MEDIA_TYPE_VIDEO);
-	 
-	    // set video quality
-	    // 1- for high quality video
-	    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-	    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-	 
-	    // start the video capture Intent
-	    ((Activity)context).startActivityForResult(intent, CAMERA_CAPTURE_VIDEO_REQUEST_CODE);
-	}
-	
-	public static Uri pickPhoto(Context context, Uri fileUri) {
-		Intent intent = new Intent(Intent.ACTION_PICK);
-		
-		fileUri = getOutputMediaFileUri(context, MEDIA_TYPE_IMAGE);
-		
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-		intent.setType("image/*");
-		
-		// start the image picker Intent
-		((Activity)context).startActivityForResult(intent, GALLERY_PICK_IMAGE_REQUEST_CODE);
-		
-				
+		((Activity) context).startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+
 		return fileUri;
 	}
 
+	public static void recordVideo(Context context, Uri fileUri) {
+		Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+		fileUri = getOutputMediaFileUri(context, MEDIA_TYPE_VIDEO);
+
+		// set video quality
+		// 1- for high quality video
+		intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+
+		// start the video capture Intent
+		((Activity) context).startActivityForResult(intent, CAMERA_CAPTURE_VIDEO_REQUEST_CODE);
+	}
+
+	public static Uri pickPhoto(Context context, Uri fileUri) {
+		Intent intent = new Intent(Intent.ACTION_PICK);
+
+		fileUri = getOutputMediaFileUri(context, MEDIA_TYPE_IMAGE);
+
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+		intent.setType("image/*");
+
+		// start the image picker Intent
+		((Activity) context).startActivityForResult(intent, GALLERY_PICK_IMAGE_REQUEST_CODE);
+
+		return fileUri;
+	}
+
+	public static Uri pickFile(Context context, Uri fileUri) {
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType("file/*");
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+		fileUri = getOutputMediaFileUri(context, MEDIA_TYPE_IMAGE);
+
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+
+		// start the image picker Intent
+		//		((Activity) context).startActivityForResult(intent, ANY_PICK_IMAGE_REQUEST_CODE);
+		((Activity) context).startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), ANY_PICK_IMAGE_REQUEST_CODE);
+
+		return fileUri;
+	}
 
 	/**
 	 * Creating file uri to store image/video

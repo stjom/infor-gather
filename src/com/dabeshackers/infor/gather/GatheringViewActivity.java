@@ -3,6 +3,8 @@ package com.dabeshackers.infor.gather;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -58,7 +60,9 @@ import com.dabeshackers.infor.gather.entities.Media;
 import com.dabeshackers.infor.gather.entities.Schedule;
 import com.dabeshackers.infor.gather.entities.User;
 import com.dabeshackers.infor.gather.helpers.BitmapHelper;
+import com.dabeshackers.infor.gather.helpers.GUIDHelper;
 import com.dabeshackers.infor.gather.helpers.LocationHelper;
+import com.dabeshackers.infor.gather.helpers.MediaCaptureHelper;
 import com.dabeshackers.infor.gather.helpers.ToastHelper;
 import com.dabeshackers.infor.gather.helpers.ZXingHelper;
 import com.dabeshackers.infor.gather.http.ApplicationWebService;
@@ -82,7 +86,7 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 
 	LinearLayout header;
 
-	Button programme, reserve;
+	Button programme, reserve, attachments;
 
 	ListView scheduleView, attendeesView;
 	List<Schedule> schedules;
@@ -99,10 +103,13 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 	private TabHost host;
 	private ViewPager pager;
 
+	private Uri fileUri;
+
 	BitmapDrawable[] layers;
 	TransitionDrawable transDraw;
 
 	List<Media> images;
+	List<Media> attachmentsList;
 	ImageAdapter adapter;
 
 	AppMain appMain;
@@ -137,6 +144,7 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			twtr_url = (TextView) findViewById(R.id.twtr_url);
 
 			programme = (Button) findViewById(R.id.programme);
+			attachments = (Button) findViewById(R.id.attachment);
 			reserve = (Button) findViewById(R.id.reserve);
 
 			header = (LinearLayout) findViewById(R.id.header);
@@ -175,7 +183,7 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 				@Override
 				public void onClick(View arg0) {
 					try {
-						String url = "http://www.infordiscuss.codesndbx.com";
+						String url = "http://www.infordiscuss.codesndbx.com/questions/ask";
 						Intent i = new Intent(Intent.ACTION_VIEW);
 						i.setData(Uri.parse(url));
 						startActivity(i);
@@ -212,8 +220,19 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 						startActivityForResult(intent, ScheduleWriteActivity.NEW_REQUEST_CODE);
 					}
 				});
+
+				attachments.setVisibility(View.VISIBLE);
+				attachments.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						fileUri = MediaCaptureHelper.pickFile(GatheringViewActivity.this, fileUri);
+					}
+				});
+
 			} else {
 				programme.setVisibility(View.GONE);
+				attachments.setVisibility(View.GONE);
 			}
 
 			setupTabs();
@@ -688,6 +707,40 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				Toast.makeText(GatheringViewActivity.this, "Scanning cancelled", Toast.LENGTH_SHORT).show();
+			}
+		} else if (requestCode == MediaCaptureHelper.ANY_PICK_IMAGE_REQUEST_CODE) {
+			if (resultCode == Activity.RESULT_OK) {
+				if (attachmentsList == null) {
+					attachmentsList = new ArrayList<Media>();
+				}
+
+				File f = new File(fileUri.getPath());
+
+				Media media = new Media(GatheringViewActivity.this);
+				media.setId(GUIDHelper.createGUID());
+				media.setType(Media.MEDIA_TYPE_DOCUMENT);
+				media.setLocalFilePath(fileUri.getPath());
+				media.setName(f.getName());
+				media.setStatus(Media.MEDIA_STATUS_NEW);
+
+				User currentUser = appMain.getCurrentUser();
+
+				media.setEdited_by(currentUser.getId());
+				media.setCreated(Calendar.getInstance().getTimeInMillis());
+				media.setUpdated(Calendar.getInstance().getTimeInMillis());
+				media.setVersion(1);
+
+				if (ApplicationWebService.Media.pushFileToBackEnd(GatheringViewActivity.this, media)) {
+					attachmentsList.add(media);
+					//TODO: POPULATE
+				}
+
+				//				for (Media m : attachmentsList) {
+				//					//					Log.v("");
+				//				}
+
+				// Populate GridView
+				//Save and Retrieve
 			}
 		}
 	}

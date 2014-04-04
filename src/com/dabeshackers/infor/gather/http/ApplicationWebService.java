@@ -637,6 +637,105 @@ public class ApplicationWebService {
 	public static class Media {
 		private static final String TAG = Media.class.getSimpleName();
 
+		public static boolean pushFileToBackEnd(Context context, com.dabeshackers.infor.gather.entities.Media record) {
+			return true;
+			//Ensure that all images have been uploaded first
+			//			String ftpDir = ApplicationUtils.FTP_ROOT_IMAGES_URL + record.getId() + "/";
+			//			boolean isFtpUploadFailed = false;
+			//			try {
+			//				FtpHelper.deleteDirectory(context, ftpDir);
+			//			} catch (IllegalStateException e2) {
+			//				e2.printStackTrace();
+			//				isFtpUploadFailed = true;
+			//			} catch (IOException e2) {
+			//				e2.printStackTrace();
+			//				isFtpUploadFailed = true;
+			//			} catch (FTPIllegalReplyException e2) {
+			//				e2.printStackTrace();
+			//				isFtpUploadFailed = true;
+			//			} catch (FTPException e2) {
+			//				e2.printStackTrace();
+			//				isFtpUploadFailed = true;
+			//			} catch (FTPDataTransferException e2) {
+			//				e2.printStackTrace();
+			//				isFtpUploadFailed = true;
+			//			} catch (FTPAbortedException e2) {
+			//				e2.printStackTrace();
+			//				isFtpUploadFailed = true;
+			//			}
+			//
+			//			//return false if failed
+			//			Log.d(TAG, "isFtpUploadFailed " + isFtpUploadFailed);
+			//			if (isFtpUploadFailed) {
+			//				return false;
+			//			}
+			//
+			//			List<File> files = new ArrayList<File>();
+			//			List<com.dabeshackers.infor.gather.entities.Media> images = record.getImagesList();
+			//
+			//			for (com.dabeshackers.infor.gather.entities.Media media : images) {
+			//				File f = new File(media.getLocalFilePath());
+			//				files.add(f);
+			//			}
+			//
+			//			Log.d(TAG, "uploading images...");
+			//			try {
+			//				FtpHelper.uploadFiles(context, files, ftpDir);
+			//			} catch (IllegalStateException e1) {
+			//				e1.printStackTrace();
+			//				isFtpUploadFailed = true;
+			//			} catch (IOException e1) {
+			//				e1.printStackTrace();
+			//				isFtpUploadFailed = true;
+			//			} catch (FTPIllegalReplyException e1) {
+			//				e1.printStackTrace();
+			//				isFtpUploadFailed = true;
+			//			} catch (FTPException e1) {
+			//				e1.printStackTrace();
+			//				isFtpUploadFailed = true;
+			//			} catch (FTPDataTransferException e1) {
+			//				e1.printStackTrace();
+			//				isFtpUploadFailed = true;
+			//			} catch (FTPAbortedException e1) {
+			//				e1.printStackTrace();
+			//				isFtpUploadFailed = true;
+			//			}
+			//
+			//			//return false if failed
+			//			Log.d(TAG, "isFtpUploadFailed " + isFtpUploadFailed);
+			//			if (isFtpUploadFailed) {
+			//				return false;
+			//			}
+			//
+			//			//Proceed to saving
+			//			String HTTP_POST_URL = WebServiceUrls.Media.PUSH_RECORD;
+			//
+			//			ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+			//			postParameters.add(new BasicNameValuePair("id", record.getId()));
+			//			postParameters.add(new BasicNameValuePair("owner_id", record.getOwner_id()));
+			//			postParameters.add(new BasicNameValuePair("type", record.getType()));
+			//			postParameters.add(new BasicNameValuePair("name", record.getName()));
+			//			postParameters.add(new BasicNameValuePair("status", String.valueOf(record.getStatus())));
+			//
+			//			postParameters.add(new BasicNameValuePair("edited_by", record.getEdited_by()));
+			//			postParameters.add(new BasicNameValuePair("created", String.valueOf(record.getCreated())));
+			//			postParameters.add(new BasicNameValuePair("updated", String.valueOf(record.getUpdated())));
+			//			postParameters.add(new BasicNameValuePair("version", String.valueOf(record.getVersion())));
+			//
+			//			String ret = "0";
+			//			try {
+			//				ret = CustomHttpClient.executeHttpPost(HTTP_POST_URL, postParameters).toString();
+			//			} catch (Exception e) {
+			//				e.printStackTrace();
+			//			}
+			//
+			//			if (ret.startsWith("-1")) {
+			//				return false;
+			//			} else {
+			//				return true;
+			//			}
+		}
+
 		public static boolean pushRecordToBackEnd(Context context, com.dabeshackers.infor.gather.entities.Media record) {
 			Log.d(TAG, "pushRecordToBackEnd() method invoked!");
 

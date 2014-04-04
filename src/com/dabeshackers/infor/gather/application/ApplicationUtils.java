@@ -56,6 +56,7 @@ public class ApplicationUtils {
 
 	public static final String HOME_URL = "http://codesndbx.com";
 	public static final String FTP_ROOT_IMAGES_URL = "/inforgather/images/";
+	public static final String FTP_ROOT_FILES_URL = "/inforgather/files/";
 	public static final String FTP_ROOT_TEMP_URL = "/inforgather/temp/";
 	public static final String ACCOUNT_IMAGES_URL = HOME_URL + "/android/inforgather/images/";
 
