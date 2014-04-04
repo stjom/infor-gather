@@ -84,6 +84,7 @@
     <string name="menulbl_unpublish">Unpublish</string>
     <string name="menulbl_publish">Publish</string>
     <string name="menulbl_share">Share</string>
+    <string name="menulbl_delete">Remove</string>
     <string name="hint_description_edittext">Give more details about your gathering</string>
     <string name="menulbl_attachitem">Attach Item</string>
     <string name="menulbl_locationpicker">Pick Location</string>

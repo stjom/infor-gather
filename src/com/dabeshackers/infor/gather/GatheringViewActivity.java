@@ -402,6 +402,11 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 		spec.setIndicator("Attendees");
 		host.addTab(spec);
 
+		spec = host.newTabSpec("tab6");
+		spec.setContent(R.id.tab6);
+		spec.setIndicator("Attachments");
+		host.addTab(spec);
+
 		// pager.setAdapter(new MyPagerAdapter(ViewOfferActivity.this));
 		pager.setOnPageChangeListener(this);
 		host.setOnTabChangedListener(this);
@@ -428,8 +433,10 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			pageNumber = 3;
 		} else if (tabId.equals("tab5")) {
 			pageNumber = 4;
-		} else {
+		} else if (tabId.equals("tab6")) {
 			pageNumber = 5;
+		} else {
+			pageNumber = 0;
 		}
 		pager.setCurrentItem(pageNumber);
 	}
@@ -614,72 +621,34 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 
 			final PopupMenu popup = new PopupMenu(GatheringViewActivity.this, overflow);
 			//set overflow options
-			popup.getMenuInflater().inflate(R.menu.activity_gathering_overflow_menu, popup.getMenu());
+			popup.getMenuInflater().inflate(R.menu.schedule_list_overflow_menu, popup.getMenu());
 			popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 				@Override
 				public boolean onMenuItemClick(android.view.MenuItem menu) {
-					//					switch (menu.getItemId()) {
-					//
-					//					case R.id.menu_edit:
-					//						editGathering(item);
-					//
-					//						break;
-					//
-					//					case R.id.menu_share:
-					//						boolean withImage = false;
-					//						File myFile = null;
-					//
-					//						if (item.getImagesList() != null && item.getImagesList().size() > 0) {
-					//							withImage = true;
-					//							myFile = new File(item.getImagesList().get(0).getLocalFilePath());
-					//						}
-					//
-					//						final StringBuilder msg = new StringBuilder();
-					//						msg.append("Hey, I've come across this gathering. Check it out!\n");
-					//						msg.append(item.getTitle() + " by " + item.getEventMaster() + "\n");
-					//						msg.append(item.getDescription() + "\n");
-					//						msg.append("located at " + item.getLoc_text() + "\n");
-					//						msg.append("visit " + item.getRef_url() + " for more info.");
-					//
-					//						final Intent intent = new Intent(Intent.ACTION_SEND);
-					//						if (withImage) {
-					//							//						intent.setType(type);
-					//							intent.setType("image/jpeg");
-					//							intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-					//							intent.putExtra("android.intent.extra.STREAM", Uri.fromFile(myFile));
-					//						} else {
-					//							intent.setType("text/plain");
-					//						}
-					//
-					//						ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(activity.CLIPBOARD_SERVICE);
-					//						ClipData clip = ClipData.newPlainText("label", msg.toString());
-					//						clipboard.setPrimaryClip(clip);
-					//
-					//						intent.putExtra(Intent.EXTRA_TEXT, msg.toString());
-					//						intent.putExtra(Intent.EXTRA_SUBJECT, "A cool offer via lokal.ph");
-					//						intent.putExtra(Intent.EXTRA_TITLE, msg.toString());
-					//
-					//						try {
-					//							AlertDialog.Builder alert = new AlertDialog.Builder(activity);
-					//							alert.setTitle("Warning");
-					//							alert.setMessage("Sharing to Facebook does not allow us to put anything on the caption field. Thus, we copied the share message to your clipboard. You can long press the caption field and select PASTE to share this offer to your friends and family.\n\nOther services are not affected by this limitation.\n\nFor more information, visit:\nhttps://developers.facebook.com/policy/");
-					//							alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-					//								public void onClick(DialogInterface dialog, int which) {
-					//									startActivity(Intent.createChooser(intent, "Share using"));
-					//								}
-					//							});
-					//							alert.setIcon(android.R.drawable.ic_dialog_alert);
-					//							alert.show();
-					//
-					//						} catch (android.content.ActivityNotFoundException ex) {
-					//							// (handle error)
-					//						}
-					//						break;
-					//
-					//					default:
-					//						break;
-					//					}
+					switch (menu.getItemId()) {
+
+					case R.id.menu_edit:
+						editSchedule(item);
+
+						break;
+
+					case R.id.menu_delete:
+						AlertDialog.Builder alert = new AlertDialog.Builder(GatheringViewActivity.this);
+						alert.setTitle("Confirm removal");
+						alert.setMessage("Are you sure that you want to delete this entry?");
+						alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								deleteSchedule(item);
+							}
+						});
+						alert.setIcon(android.R.drawable.ic_dialog_alert);
+						alert.show();
+						break;
+
+					default:
+						break;
+					}
 
 					return true;
 				}
@@ -721,6 +690,25 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 				Toast.makeText(GatheringViewActivity.this, "Scanning cancelled", Toast.LENGTH_SHORT).show();
 			}
 		}
+	}
+
+	private void editSchedule(Schedule schedule) {
+		Intent intent = new Intent(GatheringViewActivity.this, ScheduleWriteActivity.class);
+		intent.putExtra("item", schedule);
+		startActivityForResult(intent, ScheduleWriteActivity.NEW_REQUEST_CODE);
+	}
+
+	private void deleteSchedule(final Schedule schedule) {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				if (ApplicationWebService.Schedules.deleteFromBackEnd(GatheringViewActivity.this, schedule)) {
+					retrieveSchedules();
+				}
+			}
+		}).start();
+
 	}
 
 }

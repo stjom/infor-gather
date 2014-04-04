@@ -1,6 +1,12 @@
 package com.dabeshackers.infor.gather.entities;
 
-public class Schedule {
+import java.io.Serializable;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+public class Schedule implements Serializable, Cloneable {
+
+	private static final long serialVersionUID = -4467711814241585735L;
 
 	private String id;
 	private String gathering_id;
@@ -16,6 +22,25 @@ public class Schedule {
 	private long created;
 	private long updated;
 	private int version;
+
+	private Schedule snapShot;
+
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
+	public Schedule getSnapShot() {
+		return snapShot;
+	}
+
+	public void createSnapShot() throws CloneNotSupportedException {
+		this.snapShot = (Schedule) clone();
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 
 	public String getId() {
 		return id;

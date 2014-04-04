@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_edit"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/menulbl_edit"/>
+    
+    <item
+        android:id="@+id/menu_delete"
+        android:textColor="@color/light_gray"
+        android:orderInCategory="200"
+        android:showAsAction="always"
+        android:title="@string/menulbl_delete"/>
+
+</menu>

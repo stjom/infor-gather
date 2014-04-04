@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/app_theme_card_ui"
+    android:orientation="horizontal"
+    android:paddingBottom="20dip"
+    android:paddingTop="5dip" >
+
+    <!-- ListRow Left sied Thumbnail image -->
+
+
+    <!-- Title Of Document -->
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dip"
+        android:layout_marginLeft="20dip"
+        android:layout_marginTop="15dip"
+        android:layout_toLeftOf="@+id/overflow"
+        android:singleLine="true"
+        android:text="TLDV LSR Orientation"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/med_gray" />
+
+    <Button
+        android:id="@+id/overflow"
+        android:layout_width="25dip"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/venue"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="4dip"
+        android:layout_marginRight="20dip"
+        android:layout_marginTop="15dip"
+        android:background="@drawable/app_theme_list_overflow_button"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_marginBottom="4dip"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:text="This is the subtitle"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/med_gray" />
+
+</RelativeLayout>

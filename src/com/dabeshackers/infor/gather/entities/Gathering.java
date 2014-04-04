@@ -45,6 +45,7 @@ public class Gathering implements Serializable, Cloneable {
 
 	private List<String> tagsList;
 	private List<Media> imagesList;
+	private List<Media> attachmentsList;
 	private transient List<Bitmap> imagesBitmapList;
 	private List<Attendee> attendees;
 	private List<Schedule> programme;

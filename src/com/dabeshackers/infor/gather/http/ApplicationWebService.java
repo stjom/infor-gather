@@ -375,6 +375,29 @@ public class ApplicationWebService {
 
 			return items;
 		}
+
+		public static boolean deleteFromBackEnd(Context context, Schedule record) {
+			Log.d(TAG, "pushRecordToBackEnd() method invoked!");
+
+			String HTTP_POST_URL = WebServiceUrls.Schedule.DELETE_RECORD;
+
+			ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+			postParameters.add(new BasicNameValuePair("id", record.getId()));
+
+			String ret = "0";
+			try {
+				ret = CustomHttpClient.executeHttpPost(HTTP_POST_URL, postParameters).toString();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			if (ret.startsWith("-1")) {
+				return false;
+			} else {
+				return true;
+			}
+
+		}
 	}
 
 	public static class Gatherings {

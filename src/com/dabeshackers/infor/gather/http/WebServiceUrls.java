@@ -28,6 +28,7 @@ public class WebServiceUrls {
 	public static class Schedule {
 		public static final String PUSH_RECORD = "http://codesndbx.com/android/inforgather/schedule_write.php";
 		public static final String SELECT_BY_GATHERING_ID = "http://codesndbx.com/android/inforgather/schedule_select_by_gathering_id.php";
+		public static final String DELETE_RECORD = "http://codesndbx.com/android/inforgather/schedule_delete.php";
 	}
 
 	public static class Media {
