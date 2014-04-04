@@ -13,23 +13,21 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 public class ZXingHelper {
 
+	public final static int REQUEST_CODE = 12345;
 
-	public static Bitmap generateQRCode(String uniqueID, int width, int height) {
+	public static Bitmap generateQRCode(String content, int width, int height) {
 
 		QRCodeWriter writer = new QRCodeWriter();
-		try
-		{
+		try {
 			EnumMap<EncodeHintType, Object> hint = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
 			hint.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-			BitMatrix bitMatrix = writer.encode(uniqueID, BarcodeFormat.QR_CODE, width, height, hint);
+			BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, width, height, hint);
 			int mxWidth = bitMatrix.getWidth();
 			int mxHeight = bitMatrix.getHeight();
 			int[] pixels = new int[mxWidth * mxHeight];
-			for (int y = 0; y < mxHeight; y++)
-			{
+			for (int y = 0; y < mxHeight; y++) {
 				int offset = y * mxWidth;
-				for (int x = 0; x < mxWidth; x++)
-				{
+				for (int x = 0; x < mxWidth; x++) {
 
 					pixels[offset + x] = bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE;
 				}
@@ -37,7 +35,7 @@ public class ZXingHelper {
 
 			Bitmap bitmap = Bitmap.createBitmap(mxWidth, mxHeight, Bitmap.Config.ARGB_8888);
 			bitmap.setPixels(pixels, 0, mxWidth, 0, 0, mxWidth, mxHeight);
-			
+
 			return bitmap;
 		} catch (WriterException e) {
 			// TODO Auto-generated catch block
@@ -45,23 +43,20 @@ public class ZXingHelper {
 			return null;
 		}
 	}
-	
+
 	public static Bitmap generateEAN13BarCode(String uniqueID, int width, int height) {
 
 		QRCodeWriter writer = new QRCodeWriter();
-		try
-		{
+		try {
 			EnumMap<EncodeHintType, Object> hint = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
 			hint.put(EncodeHintType.CHARACTER_SET, "UTF-8");
 			BitMatrix bitMatrix = writer.encode(uniqueID, BarcodeFormat.EAN_13, width, height, hint);
 			int mxWidth = bitMatrix.getWidth();
 			int mxHeight = bitMatrix.getHeight();
 			int[] pixels = new int[mxWidth * mxHeight];
-			for (int y = 0; y < mxHeight; y++)
-			{
+			for (int y = 0; y < mxHeight; y++) {
 				int offset = y * mxWidth;
-				for (int x = 0; x < mxWidth; x++)
-				{
+				for (int x = 0; x < mxWidth; x++) {
 
 					pixels[offset + x] = bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE;
 				}
@@ -69,7 +64,7 @@ public class ZXingHelper {
 
 			Bitmap bitmap = Bitmap.createBitmap(mxWidth, mxHeight, Bitmap.Config.ARGB_8888);
 			bitmap.setPixels(pixels, 0, mxWidth, 0, 0, mxWidth, mxHeight);
-			
+
 			return bitmap;
 		} catch (WriterException e) {
 			// TODO Auto-generated catch block

@@ -231,7 +231,7 @@ public class EditUserActivity extends SherlockFragmentActivity {
 
 							AlertDialog.Builder alert = new AlertDialog.Builder(EditUserActivity.this);
 							alert.setTitle("Unable to save changes.");
-							alert.setMessage("Trade Name is already taken. Please change it and try again.");
+							alert.setMessage("Team Name is already taken. Please change it and try again.");
 							alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {
 

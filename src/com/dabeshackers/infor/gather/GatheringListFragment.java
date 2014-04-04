@@ -115,8 +115,8 @@ public class GatheringListFragment extends SherlockListFragment {
 				// Show Progress Dialog
 				pd = new ProgressDialog(activity);
 				pd.setIndeterminate(true);
-				pd.setMessage("Waiting for location...");
-				pd.setTitle("Please wait.");
+				pd.setMessage("Loading...");
+				pd.setTitle("Just a sec");
 				pd.setCancelable(false);
 				pd.show();
 			}

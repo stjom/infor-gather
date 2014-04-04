@@ -47,6 +47,7 @@ public class ScheduleWriteActivity extends SherlockActivity {
 	ChipsAdapter chipsAdapter;
 
 	private Schedule currentItem;
+	private String gathering_Id;
 
 	private long currentFromTime;
 	private long currentToTime;
@@ -70,15 +71,19 @@ public class ScheduleWriteActivity extends SherlockActivity {
 		currentFromTime = Calendar.getInstance().getTimeInMillis();
 		currentToTime = Calendar.getInstance().getTimeInMillis();
 
-		if (getIntent().getExtras().containsKey("item")) {
+		if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().containsKey("item")) {
 			currentItem = (Schedule) getIntent().getExtras().getSerializable("item");
 			currentFromTime = currentItem.getTimestart();
 			currentToTime = currentItem.getTimeend();
 		}
 
+		if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().containsKey("gathering_id")) {
+			gathering_Id = getIntent().getExtras().getString("gathering_id");
+		}
+
 		title = (EditText) findViewById(R.id.title);
 		venue = (EditText) findViewById(R.id.subtitle);
-		host = (EditText) findViewById(R.id.eventmaster);
+		host = (EditText) findViewById(R.id.host);
 
 		from = (Button) findViewById(R.id.from);
 		to = (Button) findViewById(R.id.to);
@@ -187,6 +192,7 @@ public class ScheduleWriteActivity extends SherlockActivity {
 					if (currentItem == null) {
 						currentItem = new Schedule();
 						currentItem.setId(GUIDHelper.createGUID());
+						currentItem.setGathering_id(gathering_Id);
 						currentItem.setVersion(1);
 						currentItem.setCreated(Calendar.getInstance().getTimeInMillis());
 					} else {

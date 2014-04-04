@@ -1,6 +1,7 @@
 package com.dabeshackers.infor.gather;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -10,6 +11,7 @@ import java.util.regex.Pattern;
 import us.feras.ecogallery.EcoGallery;
 import us.feras.ecogallery.EcoGalleryAdapterView;
 import us.feras.ecogallery.EcoGalleryAdapterView.OnItemClickListener;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -25,15 +27,23 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
@@ -41,18 +51,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dabeshackers.infor.gather.application.AppMain;
+import com.dabeshackers.infor.gather.application.ApplicationUtils;
+import com.dabeshackers.infor.gather.entities.Attendee;
 import com.dabeshackers.infor.gather.entities.Gathering;
 import com.dabeshackers.infor.gather.entities.Media;
+import com.dabeshackers.infor.gather.entities.Schedule;
 import com.dabeshackers.infor.gather.entities.User;
 import com.dabeshackers.infor.gather.helpers.BitmapHelper;
 import com.dabeshackers.infor.gather.helpers.LocationHelper;
 import com.dabeshackers.infor.gather.helpers.ToastHelper;
+import com.dabeshackers.infor.gather.helpers.ZXingHelper;
+import com.dabeshackers.infor.gather.http.ApplicationWebService;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
 public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implements OnTabChangeListener, OnPageChangeListener {
-
+	private static final String TAG = GatheringViewActivity.class.getSimpleName();
 	TextView title;
 	TextView subtitle;
 	TextView description;
@@ -65,9 +80,18 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 	TextView gplus_url;
 	TextView twtr_url;
 
+	LinearLayout header;
+
 	Button programme, reserve;
 
+	ListView scheduleView, attendeesView;
+	List<Schedule> schedules;
+	ScheduleAdapter scheduleAdapter;
+
+	List<Attendee> attendees;
+
 	ImageView img, share, navigate;
+	ImageButton img_visibility, confirm_attendance, ask_question;
 	EcoGallery ecoGallery;
 
 	private Gathering item;
@@ -115,6 +139,53 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			programme = (Button) findViewById(R.id.programme);
 			reserve = (Button) findViewById(R.id.reserve);
 
+			header = (LinearLayout) findViewById(R.id.header);
+
+			img_visibility = (ImageButton) findViewById(R.id.img_visibility);
+			img_visibility.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					if (header.getVisibility() == View.VISIBLE) {
+						header.setVisibility(View.GONE);
+					} else {
+						header.setVisibility(View.VISIBLE);
+					}
+				}
+			});
+			confirm_attendance = (ImageButton) findViewById(R.id.confirm_attendance);
+			confirm_attendance.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					try {
+						Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+						intent.putExtra("SCAN_MODE", "QR_CODE_MODE,PRODUCT_MODE");
+						startActivityForResult(intent, ZXingHelper.REQUEST_CODE);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block     
+						e.printStackTrace();
+						ToastHelper.toast(GatheringViewActivity.this, "ERROR:" + e, Toast.LENGTH_SHORT);
+					}
+				}
+			});
+			ask_question = (ImageButton) findViewById(R.id.ask_question);
+			ask_question.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					try {
+						String url = "http://www.infordiscuss.codesndbx.com";
+						Intent i = new Intent(Intent.ACTION_VIEW);
+						i.setData(Uri.parse(url));
+						startActivity(i);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block     
+						e.printStackTrace();
+
+					}
+				}
+			});
 			title.setText(item.getTitle());
 			organizer.setText("Organized By: " + item.getOrganizer());
 			eventmaster.setText("Event Master: " + item.getEventMaster());
@@ -126,6 +197,10 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			gplus_url.setText(item.getGplus_url());
 			twtr_url.setText(item.getTwitter_url());
 
+			//Launch new thread to retrieve schedules / attendees
+			retrieveSchedules();
+			retrieveAttendees();
+
 			if (currentUser.getId().equals(item.getEdited_by())) {
 				programme.setVisibility(View.VISIBLE);
 				programme.setOnClickListener(new OnClickListener() {
@@ -133,6 +208,7 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent(GatheringViewActivity.this, ScheduleWriteActivity.class);
+						intent.putExtra("gathering_id", item.getId());
 						startActivityForResult(intent, ScheduleWriteActivity.NEW_REQUEST_CODE);
 					}
 				});
@@ -166,7 +242,6 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 
 					@Override
 					public void run() {
-						//						ecoGallery.setSelection(item.get, true);
 						final int selection = (ecoGallery.getSelectedItemPosition() + 1) > adapter.getCount() - 1 ? 0 : ecoGallery.getSelectedItemPosition() + 1;
 						ecoGallery.post(new Runnable() {
 
@@ -266,6 +341,35 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 
 		}
 
+	}
+
+	private void retrieveAttendees() {
+	}
+
+	private void retrieveSchedules() {
+		scheduleView = (ListView) findViewById(R.id.schedule);
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				schedules = ApplicationWebService.Schedules.fetchRecordsByGatheringId(GatheringViewActivity.this, item.getId());
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						if (schedules != null && schedules.size() > 0) {
+							scheduleAdapter = new ScheduleAdapter(GatheringViewActivity.this, R.layout.schedule_list_row, schedules);
+							scheduleView.setAdapter(scheduleAdapter);
+						} else {
+							scheduleView.setAdapter(null);
+						}
+					}
+
+				});
+
+			}
+
+		}).start();
 	}
 
 	private void setupTabs() {
@@ -452,11 +556,171 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			return true;
 
 		case R.id.menu_qr:
+			String content = "?id=" + item.getItemId() + "&user_id=" + currentUser.getId();
+			Bitmap qr = ZXingHelper.generateQRCode(content, 200, 200);
+			File f = new File(ApplicationUtils.Paths.getLocalAppImagesFolder(GatheringViewActivity.this), "qrtemp.jpg");
+			try {
+				BitmapHelper.saveBitmapToSD(qr, f.getAbsolutePath());
 
+				Intent intent = new Intent();
+				intent.setAction(Intent.ACTION_VIEW);
+				intent.setDataAndType(Uri.parse("file://" + f.getAbsolutePath()), "image/*");
+				startActivity(intent);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			break;
 
 		}
 		return true;
+	}
+
+	public class ScheduleAdapter extends ArrayAdapter<Schedule> {
+
+		List<Schedule> objects;
+
+		public ScheduleAdapter(Context context, int textViewResourceId, List<Schedule> objects) {
+			super(context, textViewResourceId, objects);
+			this.objects = objects;
+		}
+
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+
+			LayoutInflater inflater = getLayoutInflater();
+
+			final Schedule item = objects.get(position);
+
+			convertView = inflater.inflate(R.layout.schedule_list_row, parent, false);
+
+			final Button overflow = (Button) convertView.findViewById(R.id.overflow);
+			final TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
+			final TextView txtVenue = (TextView) convertView.findViewById(R.id.venue);
+			final TextView txtOrganizer = (TextView) convertView.findViewById(R.id.host);
+			final TextView txtDate = (TextView) convertView.findViewById(R.id.date);
+
+			txtTitle.setText(item.getTitle());
+			txtVenue.setText(item.getVenue());
+			txtOrganizer.setText("Hosted By: " + item.getHost());
+			txtDate.setText(new SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.ENGLISH).format(item.getTimestart()) + " To " + new SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.ENGLISH).format(item.getTimeend()));
+
+			if (currentUser.getId().equals(item.getEdited_by())) {
+				//Show overflow
+				overflow.setVisibility(View.VISIBLE);
+			} else {
+				//Hide overflow
+				overflow.setVisibility(View.GONE);
+			}
+
+			final PopupMenu popup = new PopupMenu(GatheringViewActivity.this, overflow);
+			//set overflow options
+			popup.getMenuInflater().inflate(R.menu.activity_gathering_overflow_menu, popup.getMenu());
+			popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+				@Override
+				public boolean onMenuItemClick(android.view.MenuItem menu) {
+					//					switch (menu.getItemId()) {
+					//
+					//					case R.id.menu_edit:
+					//						editGathering(item);
+					//
+					//						break;
+					//
+					//					case R.id.menu_share:
+					//						boolean withImage = false;
+					//						File myFile = null;
+					//
+					//						if (item.getImagesList() != null && item.getImagesList().size() > 0) {
+					//							withImage = true;
+					//							myFile = new File(item.getImagesList().get(0).getLocalFilePath());
+					//						}
+					//
+					//						final StringBuilder msg = new StringBuilder();
+					//						msg.append("Hey, I've come across this gathering. Check it out!\n");
+					//						msg.append(item.getTitle() + " by " + item.getEventMaster() + "\n");
+					//						msg.append(item.getDescription() + "\n");
+					//						msg.append("located at " + item.getLoc_text() + "\n");
+					//						msg.append("visit " + item.getRef_url() + " for more info.");
+					//
+					//						final Intent intent = new Intent(Intent.ACTION_SEND);
+					//						if (withImage) {
+					//							//						intent.setType(type);
+					//							intent.setType("image/jpeg");
+					//							intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+					//							intent.putExtra("android.intent.extra.STREAM", Uri.fromFile(myFile));
+					//						} else {
+					//							intent.setType("text/plain");
+					//						}
+					//
+					//						ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(activity.CLIPBOARD_SERVICE);
+					//						ClipData clip = ClipData.newPlainText("label", msg.toString());
+					//						clipboard.setPrimaryClip(clip);
+					//
+					//						intent.putExtra(Intent.EXTRA_TEXT, msg.toString());
+					//						intent.putExtra(Intent.EXTRA_SUBJECT, "A cool offer via lokal.ph");
+					//						intent.putExtra(Intent.EXTRA_TITLE, msg.toString());
+					//
+					//						try {
+					//							AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+					//							alert.setTitle("Warning");
+					//							alert.setMessage("Sharing to Facebook does not allow us to put anything on the caption field. Thus, we copied the share message to your clipboard. You can long press the caption field and select PASTE to share this offer to your friends and family.\n\nOther services are not affected by this limitation.\n\nFor more information, visit:\nhttps://developers.facebook.com/policy/");
+					//							alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+					//								public void onClick(DialogInterface dialog, int which) {
+					//									startActivity(Intent.createChooser(intent, "Share using"));
+					//								}
+					//							});
+					//							alert.setIcon(android.R.drawable.ic_dialog_alert);
+					//							alert.show();
+					//
+					//						} catch (android.content.ActivityNotFoundException ex) {
+					//							// (handle error)
+					//						}
+					//						break;
+					//
+					//					default:
+					//						break;
+					//					}
+
+					return true;
+				}
+
+			});
+
+			overflow.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					popup.show();
+				}
+			});
+
+			return convertView;
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == ScheduleWriteActivity.NEW_REQUEST_CODE) {
+			if (resultCode == Activity.RESULT_OK) {
+
+				retrieveSchedules();
+			}
+		} else if (requestCode == ZXingHelper.REQUEST_CODE) {
+			if (resultCode == Activity.RESULT_OK) {
+
+				String result = data.getStringExtra("SCAN_RESULT");
+				if (result != null && result.length() > 0) {
+
+					//					initiatePaymentPreparation(result);
+					Log.v(TAG, "Update attendance status here... " + result);
+					ToastHelper.toast(GatheringViewActivity.this, "Attendance confirmed.", Toast.LENGTH_LONG);
+				}
+
+			} else if (resultCode == Activity.RESULT_CANCELED) {
+				Toast.makeText(GatheringViewActivity.this, "Scanning cancelled", Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 
 }

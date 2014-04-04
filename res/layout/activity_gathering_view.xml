@@ -28,22 +28,56 @@
                 android:layout_height="60dip"
                 android:background="@drawable/app_theme_top_border"
                 android:gravity="right|center_vertical" >
+                
+                <ImageButton
+                    android:id="@+id/img_visibility"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="50dip"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dip"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_img_visible" />
+
+                <ImageButton
+                    android:id="@+id/confirm_attendance"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="50dip"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dip"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_attendance" />
+
+                <ImageButton
+                    android:id="@+id/ask_question"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="50dip"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dip"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_ask" />
 
                 <ImageButton
                     android:id="@+id/share"
-                    android:layout_width="70dip"
+                    android:layout_width="50dip"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical|center_horizontal"
+                    android:adjustViewBounds="true"
                     android:background="@drawable/app_theme_transparent_button"
-                    android:src="@drawable/ic_share_0padding_lblue" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_share_0padding_lblue"
+                    android:visibility="gone" />
 
                 <ImageButton
                     android:id="@+id/navigate"
-                    android:layout_width="70dip"
+                    android:layout_width="50dip"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical|center_horizontal"
                     android:background="@drawable/app_theme_transparent_button"
-                    android:src="@drawable/ic_navigate_0padding_lblue" />
+                    android:src="@drawable/ic_navigate_0padding_lblue"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/modify"
@@ -327,37 +361,41 @@
                     <FrameLayout
                         android:id="@+id/tab4"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:background="@color/light_gray" >
 
-                        <ScrollView
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fillViewport="true"
+                            android:orientation="vertical"
                             android:paddingBottom="10dip"
                             android:paddingLeft="15dip"
                             android:paddingRight="15dip"
                             android:paddingTop="10dip" >
 
-                            <LinearLayout
+                            <Button
+                                android:id="@+id/programme"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical" >
+                                android:layout_marginLeft="16dip"
+                                android:layout_marginRight="16dip"
+                                android:text="Add Schedule"
+                                android:textColor="@color/white" />
 
-                                <Button
-                                    android:id="@+id/programme"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="16dip"
-                                    android:layout_marginRight="16dip"
-                                    android:text="Edit Programme" />
-                                
-                                <ListView 
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent">
-                                    
-                                </ListView>
-                            </LinearLayout>
-                        </ScrollView>
+                            <ListView
+                                android:id="@+id/schedule"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="5dip"
+                                android:layout_marginTop="16dip"
+                                android:divider="@null"
+                                android:dividerHeight="0dp"
+                                android:fastScrollEnabled="false"
+                                android:scrollbars="none"
+                                android:smoothScrollbar="false"
+                                android:stackFromBottom="false"
+                                android:transcriptMode="disabled" />
+                        </LinearLayout>
                     </FrameLayout>
 
                     <FrameLayout
@@ -385,7 +423,13 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="16dip"
                                     android:layout_marginRight="16dip"
-                                    android:text="Reserve a seat" />
+                                    android:text="Reserve a seat"
+                                    android:textColor="@color/white" />
+
+                                <ListView
+                                    android:id="@+id/attendees"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent" />
                             </LinearLayout>
                         </ScrollView>
                     </FrameLayout>

@@ -122,24 +122,26 @@ public class ApplicationWebService {
 		}
 
 		public static boolean isTradeNameUnique(Context context, String tradeName) {
-			Log.d(TAG, "isTradeNameUnique() method invoked!");
-			String HTTP_POST_URL = WebServiceUrls.User.IS_TRADENAME_UNIQUE;
+			return true; //Always return true as we are going to allow same TeamNames
 
-			ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
-			postParameters.add(new BasicNameValuePair("tradeName", tradeName));
-
-			String ret = "0";
-			try {
-				ret = CustomHttpClient.executeHttpPost(HTTP_POST_URL, postParameters).toString();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			if (ret.startsWith("-1")) {
-				return false; // Meaning, it's existing
-			} else {
-				return true; // Meaning, it's unqie
-			}
+			//			Log.d(TAG, "isTradeNameUnique() method invoked!");
+			//			String HTTP_POST_URL = WebServiceUrls.User.IS_TRADENAME_UNIQUE;
+			//
+			//			ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+			//			postParameters.add(new BasicNameValuePair("tradeName", tradeName));
+			//
+			//			String ret = "0";
+			//			try {
+			//				ret = CustomHttpClient.executeHttpPost(HTTP_POST_URL, postParameters).toString();
+			//			} catch (Exception e) {
+			//				e.printStackTrace();
+			//			}
+			//
+			//			if (ret.startsWith("-1")) {
+			//				return false; // Meaning, it's existing
+			//			} else {
+			//				return true; // Meaning, it's unqie
+			//			}
 		}
 
 		public static boolean isUserExists(Context context, String id) {

@@ -83,8 +83,8 @@ public class MainContainerActivity extends SherlockFragmentActivity {
 				// Show Progress Dialog
 				pd = new ProgressDialog(MainContainerActivity.this);
 				pd.setIndeterminate(true);
-				pd.setMessage("Waiting for location...");
-				pd.setTitle("Please wait.");
+				pd.setMessage("Loading...");
+				pd.setTitle("Just a sec");
 				pd.setCancelable(false);
 				//				pd.show();
 			}
