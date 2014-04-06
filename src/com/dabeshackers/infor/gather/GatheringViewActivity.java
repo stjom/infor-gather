@@ -15,6 +15,7 @@ import us.feras.ecogallery.EcoGalleryAdapterView;
 import us.feras.ecogallery.EcoGalleryAdapterView.OnItemClickListener;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -60,6 +61,7 @@ import com.dabeshackers.infor.gather.entities.Media;
 import com.dabeshackers.infor.gather.entities.Schedule;
 import com.dabeshackers.infor.gather.entities.User;
 import com.dabeshackers.infor.gather.helpers.BitmapHelper;
+import com.dabeshackers.infor.gather.helpers.DownloadManagerHelper;
 import com.dabeshackers.infor.gather.helpers.GUIDHelper;
 import com.dabeshackers.infor.gather.helpers.LocationHelper;
 import com.dabeshackers.infor.gather.helpers.MediaCaptureHelper;
@@ -86,17 +88,20 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 
 	LinearLayout header;
 
-	Button programme, reserve, attachments;
+	Button programme, reserve, attachment;
 
-	ListView scheduleView, attendeesView;
+	ListView scheduleView, attendeesView, attachmentView;
 	List<Schedule> schedules;
 	ScheduleAdapter scheduleAdapter;
+	AttachmentAdapter attachmentAdapter;
 
 	List<Attendee> attendees;
 
 	ImageView img, share, navigate;
 	ImageButton img_visibility, confirm_attendance, ask_question;
 	EcoGallery ecoGallery;
+
+	ProgressDialog pd;
 
 	private Gathering item;
 
@@ -144,7 +149,7 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			twtr_url = (TextView) findViewById(R.id.twtr_url);
 
 			programme = (Button) findViewById(R.id.programme);
-			attachments = (Button) findViewById(R.id.attachment);
+			attachment = (Button) findViewById(R.id.attachment);
 			reserve = (Button) findViewById(R.id.reserve);
 
 			header = (LinearLayout) findViewById(R.id.header);
@@ -205,9 +210,10 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			gplus_url.setText(item.getGplus_url());
 			twtr_url.setText(item.getTwitter_url());
 
-			//Launch new thread to retrieve schedules / attendees
+			//Launch new thread to retrieve schedules / attendees / attachments
 			retrieveSchedules();
 			retrieveAttendees();
+			retrieveAttachments();
 
 			if (currentUser.getId().equals(item.getEdited_by())) {
 				programme.setVisibility(View.VISIBLE);
@@ -221,8 +227,8 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 					}
 				});
 
-				attachments.setVisibility(View.VISIBLE);
-				attachments.setOnClickListener(new OnClickListener() {
+				attachment.setVisibility(View.VISIBLE);
+				attachment.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
@@ -232,7 +238,7 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 
 			} else {
 				programme.setVisibility(View.GONE);
-				attachments.setVisibility(View.GONE);
+				attachment.setVisibility(View.GONE);
 			}
 
 			setupTabs();
@@ -389,6 +395,36 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			}
 
 		}).start();
+	}
+
+	private void retrieveAttachments() {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				attachmentsList = ApplicationWebService.Attachments.fetchRecordsByGatheringId(GatheringViewActivity.this, item.getId());
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						populateAttachments();
+					}
+
+				});
+
+			}
+
+		}).start();
+	}
+
+	private void populateAttachments() {
+		attachmentView = (ListView) findViewById(R.id.attachments);
+		if (attachmentsList != null && attachmentsList.size() > 0) {
+			attachmentAdapter = new AttachmentAdapter(GatheringViewActivity.this, R.layout.attachment_list_row, attachmentsList);
+			attachmentView.setAdapter(attachmentAdapter);
+		} else {
+			attachmentView.setAdapter(null);
+		}
 	}
 
 	private void setupTabs() {
@@ -685,6 +721,90 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 		}
 	}
 
+	public class AttachmentAdapter extends ArrayAdapter<Media> {
+
+		List<Media> objects;
+
+		public AttachmentAdapter(Context context, int textViewResourceId, List<Media> objects) {
+			super(context, textViewResourceId, objects);
+			this.objects = objects;
+		}
+
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+
+			LayoutInflater inflater = getLayoutInflater();
+
+			final Media item = objects.get(position);
+
+			convertView = inflater.inflate(R.layout.attachment_list_row, parent, false);
+
+			SimpleDateFormat df = new SimpleDateFormat("MMMM dd yyyy hh:mm a", Locale.ENGLISH);
+
+			final Button overflow = (Button) convertView.findViewById(R.id.overflow);
+			final ImageButton download = (ImageButton) convertView.findViewById(R.id.download);
+			final ImageButton delete = (ImageButton) convertView.findViewById(R.id.delete);
+			final TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
+			final TextView txtSubtitle = (TextView) convertView.findViewById(R.id.subtitle);
+
+			txtTitle.setText(item.getName());
+			txtSubtitle.setText(df.format(item.getCreated()));
+
+			download.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (DownloadManagerHelper.isDownloadManagerAvailable(GatheringViewActivity.this)) {
+						StringBuilder sb = new StringBuilder();
+						sb.append("http://codesndbx.com/android/inforgather/files/");
+						sb.append(item.getOwner_id() + "/" + item.getName());
+						DownloadManagerHelper.downloadFromURL(GatheringViewActivity.this, sb.toString(), item.getName());
+					} else {
+						ToastHelper.toast(GatheringViewActivity.this, "Unsupported Android version found. This feature is only supported in Android 2.3 and up.", Toast.LENGTH_LONG);
+					}
+				}
+
+			});
+
+			if (currentUser.getId().equals(item.getEdited_by())) {
+				//Show delete
+				delete.setVisibility(View.VISIBLE);
+				delete.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						showProgressDialog("Hang on", "Processing...", false);
+						new Thread(new Runnable() {
+
+							@Override
+							public void run() {
+								if (ApplicationWebService.Attachments.deleteRecordById(GatheringViewActivity.this, item)) {
+									runOnUiThread(new Runnable() {
+
+										@Override
+										public void run() {
+											attachmentsList.remove(item);
+											populateAttachments();
+											dismissProgressDialog();
+										}
+
+									});
+
+								}
+							}
+
+						}).start();
+					}
+				});
+			} else {
+				//Hide delete
+				delete.setVisibility(View.GONE);
+			}
+
+			return convertView;
+		}
+	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -708,18 +828,20 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				Toast.makeText(GatheringViewActivity.this, "Scanning cancelled", Toast.LENGTH_SHORT).show();
 			}
-		} else if (requestCode == MediaCaptureHelper.ANY_PICK_IMAGE_REQUEST_CODE) {
+		} else if (requestCode == MediaCaptureHelper.PICKER_ANY_FILE_REQUEST_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
+				showProgressDialog("Hang on", "Attaching and updating back-end.", false);
 				if (attachmentsList == null) {
 					attachmentsList = new ArrayList<Media>();
 				}
 
-				File f = new File(fileUri.getPath());
+				File f = new File(data.getData().getPath());
 
-				Media media = new Media(GatheringViewActivity.this);
+				final Media media = new Media(GatheringViewActivity.this);
 				media.setId(GUIDHelper.createGUID());
+				media.setOwner_id(item.getId());
 				media.setType(Media.MEDIA_TYPE_DOCUMENT);
-				media.setLocalFilePath(fileUri.getPath());
+				media.setLocalFilePath(data.getData().getPath());
 				media.setName(f.getName());
 				media.setStatus(Media.MEDIA_STATUS_NEW);
 
@@ -730,17 +852,27 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 				media.setUpdated(Calendar.getInstance().getTimeInMillis());
 				media.setVersion(1);
 
-				if (ApplicationWebService.Media.pushFileToBackEnd(GatheringViewActivity.this, media)) {
-					attachmentsList.add(media);
-					//TODO: POPULATE
-				}
+				new Thread(new Runnable() {
 
-				//				for (Media m : attachmentsList) {
-				//					//					Log.v("");
-				//				}
+					@Override
+					public void run() {
+						if (ApplicationWebService.Attachments.pushFileToBackEnd(GatheringViewActivity.this, media)) {
+							runOnUiThread(new Runnable() {
 
-				// Populate GridView
-				//Save and Retrieve
+								@Override
+								public void run() {
+									attachmentsList.add(media);
+									populateAttachments();
+									dismissProgressDialog();
+								}
+
+							});
+
+						}
+					}
+
+				}).start();
+
 			}
 		}
 	}
@@ -762,6 +894,20 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			}
 		}).start();
 
+	}
+
+	private void showProgressDialog(String title, String msg, boolean cancelable) {
+		pd = new ProgressDialog(GatheringViewActivity.this);
+		pd.setTitle(title);
+		pd.setMessage(msg);
+		pd.setCancelable(cancelable);
+		pd.show();
+	}
+
+	private void dismissProgressDialog() {
+		if (pd != null) {
+			pd.dismiss();
+		}
 	}
 
 }

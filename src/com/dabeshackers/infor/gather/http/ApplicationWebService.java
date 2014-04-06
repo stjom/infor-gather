@@ -634,107 +634,166 @@ public class ApplicationWebService {
 
 	}
 
-	public static class Media {
-		private static final String TAG = Media.class.getSimpleName();
+	public static class Attachments {
+		private static final String TAG = Attachments.class.getSimpleName();
 
 		public static boolean pushFileToBackEnd(Context context, com.dabeshackers.infor.gather.entities.Media record) {
-			return true;
-			//Ensure that all images have been uploaded first
-			//			String ftpDir = ApplicationUtils.FTP_ROOT_IMAGES_URL + record.getId() + "/";
-			//			boolean isFtpUploadFailed = false;
-			//			try {
-			//				FtpHelper.deleteDirectory(context, ftpDir);
-			//			} catch (IllegalStateException e2) {
-			//				e2.printStackTrace();
-			//				isFtpUploadFailed = true;
-			//			} catch (IOException e2) {
-			//				e2.printStackTrace();
-			//				isFtpUploadFailed = true;
-			//			} catch (FTPIllegalReplyException e2) {
-			//				e2.printStackTrace();
-			//				isFtpUploadFailed = true;
-			//			} catch (FTPException e2) {
-			//				e2.printStackTrace();
-			//				isFtpUploadFailed = true;
-			//			} catch (FTPDataTransferException e2) {
-			//				e2.printStackTrace();
-			//				isFtpUploadFailed = true;
-			//			} catch (FTPAbortedException e2) {
-			//				e2.printStackTrace();
-			//				isFtpUploadFailed = true;
-			//			}
-			//
-			//			//return false if failed
-			//			Log.d(TAG, "isFtpUploadFailed " + isFtpUploadFailed);
-			//			if (isFtpUploadFailed) {
-			//				return false;
-			//			}
-			//
-			//			List<File> files = new ArrayList<File>();
-			//			List<com.dabeshackers.infor.gather.entities.Media> images = record.getImagesList();
-			//
-			//			for (com.dabeshackers.infor.gather.entities.Media media : images) {
-			//				File f = new File(media.getLocalFilePath());
-			//				files.add(f);
-			//			}
-			//
-			//			Log.d(TAG, "uploading images...");
-			//			try {
-			//				FtpHelper.uploadFiles(context, files, ftpDir);
-			//			} catch (IllegalStateException e1) {
-			//				e1.printStackTrace();
-			//				isFtpUploadFailed = true;
-			//			} catch (IOException e1) {
-			//				e1.printStackTrace();
-			//				isFtpUploadFailed = true;
-			//			} catch (FTPIllegalReplyException e1) {
-			//				e1.printStackTrace();
-			//				isFtpUploadFailed = true;
-			//			} catch (FTPException e1) {
-			//				e1.printStackTrace();
-			//				isFtpUploadFailed = true;
-			//			} catch (FTPDataTransferException e1) {
-			//				e1.printStackTrace();
-			//				isFtpUploadFailed = true;
-			//			} catch (FTPAbortedException e1) {
-			//				e1.printStackTrace();
-			//				isFtpUploadFailed = true;
-			//			}
-			//
-			//			//return false if failed
-			//			Log.d(TAG, "isFtpUploadFailed " + isFtpUploadFailed);
-			//			if (isFtpUploadFailed) {
-			//				return false;
-			//			}
-			//
-			//			//Proceed to saving
-			//			String HTTP_POST_URL = WebServiceUrls.Media.PUSH_RECORD;
-			//
-			//			ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
-			//			postParameters.add(new BasicNameValuePair("id", record.getId()));
-			//			postParameters.add(new BasicNameValuePair("owner_id", record.getOwner_id()));
-			//			postParameters.add(new BasicNameValuePair("type", record.getType()));
-			//			postParameters.add(new BasicNameValuePair("name", record.getName()));
-			//			postParameters.add(new BasicNameValuePair("status", String.valueOf(record.getStatus())));
-			//
-			//			postParameters.add(new BasicNameValuePair("edited_by", record.getEdited_by()));
-			//			postParameters.add(new BasicNameValuePair("created", String.valueOf(record.getCreated())));
-			//			postParameters.add(new BasicNameValuePair("updated", String.valueOf(record.getUpdated())));
-			//			postParameters.add(new BasicNameValuePair("version", String.valueOf(record.getVersion())));
-			//
-			//			String ret = "0";
-			//			try {
-			//				ret = CustomHttpClient.executeHttpPost(HTTP_POST_URL, postParameters).toString();
-			//			} catch (Exception e) {
-			//				e.printStackTrace();
-			//			}
-			//
-			//			if (ret.startsWith("-1")) {
-			//				return false;
-			//			} else {
-			//				return true;
-			//			}
+			boolean isFtpUploadFailed = false;
+			String ftpDir = ApplicationUtils.FTP_ROOT_FILES_URL + record.getOwner_id() + "/";
+
+			List<File> files = new ArrayList<File>();
+			File f = new File(record.getLocalFilePath());
+			files.add(f);
+			Log.d(TAG, "uploading file...");
+			try {
+				FtpHelper.uploadFiles(context, files, ftpDir);
+			} catch (IllegalStateException e1) {
+				e1.printStackTrace();
+				isFtpUploadFailed = true;
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				isFtpUploadFailed = true;
+			} catch (FTPIllegalReplyException e1) {
+				e1.printStackTrace();
+				isFtpUploadFailed = true;
+			} catch (FTPException e1) {
+				e1.printStackTrace();
+				isFtpUploadFailed = true;
+			} catch (FTPDataTransferException e1) {
+				e1.printStackTrace();
+				isFtpUploadFailed = true;
+			} catch (FTPAbortedException e1) {
+				e1.printStackTrace();
+				isFtpUploadFailed = true;
+			}
+
+			//return false if failed
+			Log.d(TAG, "isFtpUploadFailed " + isFtpUploadFailed);
+			if (isFtpUploadFailed) {
+				return false;
+			}
+
+			//Proceed to saving
+			String HTTP_POST_URL = WebServiceUrls.Attachments.PUSH_RECORD;
+
+			ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+			postParameters.add(new BasicNameValuePair("id", record.getId()));
+			postParameters.add(new BasicNameValuePair("owner_id", record.getOwner_id()));
+			postParameters.add(new BasicNameValuePair("type", record.getType()));
+			postParameters.add(new BasicNameValuePair("name", record.getName()));
+			postParameters.add(new BasicNameValuePair("status", String.valueOf(record.getStatus())));
+
+			postParameters.add(new BasicNameValuePair("edited_by", record.getEdited_by()));
+			postParameters.add(new BasicNameValuePair("created", String.valueOf(record.getCreated())));
+			postParameters.add(new BasicNameValuePair("updated", String.valueOf(record.getUpdated())));
+			postParameters.add(new BasicNameValuePair("version", String.valueOf(record.getVersion())));
+
+			String ret = "0";
+			try {
+				ret = CustomHttpClient.executeHttpPost(HTTP_POST_URL, postParameters).toString();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			if (ret.startsWith("-1")) {
+				return false;
+			} else {
+				return true;
+			}
 		}
+
+		public static List<com.dabeshackers.infor.gather.entities.Media> fetchRecordsByGatheringId(Context context, String gathering_id) {
+
+			Log.d(TAG, "fetchRecordsByGatheringId() method invoked!");
+			List<com.dabeshackers.infor.gather.entities.Media> items = new ArrayList<com.dabeshackers.infor.gather.entities.Media>();
+
+			String HTTP_POST_URL = WebServiceUrls.Attachments.SELECT_BY_GATHERING_ID + "?id=" + Uri.encode(String.valueOf(gathering_id));
+			try {
+				InputStream responseDetail = CustomHttpClient.executeHttpGetForGson(HTTP_POST_URL);
+				Gson gsonDetail = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+				JsonReader readerDetail = new JsonReader(new InputStreamReader(responseDetail, "UTF-8"));
+
+				readerDetail.beginArray();
+				while (readerDetail.hasNext()) {
+					com.dabeshackers.infor.gather.entities.Media item = gsonDetail.fromJson(readerDetail, com.dabeshackers.infor.gather.entities.Media.class);
+					items.add(item);
+				}
+				readerDetail.endArray();
+				readerDetail.close();
+
+			} catch (IOException e) {
+				//Ignore 
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return items;
+
+		}
+
+		public static boolean deleteRecordById(Context context, com.dabeshackers.infor.gather.entities.Media record) {
+			Log.d(TAG, "clearRecordsByOfferId() method invoked!");
+
+			boolean isFtpUploadFailed = false;
+			String ftpDir = ApplicationUtils.FTP_ROOT_FILES_URL + record.getId() + "/";
+
+			List<File> files = new ArrayList<File>();
+			File f = new File(record.getLocalFilePath());
+			files.add(f);
+			Log.d(TAG, "deleting file...");
+			try {
+				FtpHelper.deleteFiles(context, files, ftpDir);
+			} catch (IllegalStateException e1) {
+				e1.printStackTrace();
+				isFtpUploadFailed = true;
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				isFtpUploadFailed = true;
+			} catch (FTPIllegalReplyException e1) {
+				e1.printStackTrace();
+				isFtpUploadFailed = true;
+			} catch (FTPException e1) {
+				e1.printStackTrace();
+				isFtpUploadFailed = true;
+			} catch (FTPDataTransferException e1) {
+				e1.printStackTrace();
+				isFtpUploadFailed = true;
+			} catch (FTPAbortedException e1) {
+				e1.printStackTrace();
+				isFtpUploadFailed = true;
+			}
+
+			//return false if failed
+			Log.d(TAG, "isFtpUploadFailed " + isFtpUploadFailed);
+			if (isFtpUploadFailed) {
+				return false;
+			}
+
+			String HTTP_POST_URL = WebServiceUrls.Attachments.DELETE_RECORD_BY_ID;
+
+			ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+			postParameters.add(new BasicNameValuePair("id", record.getId()));
+
+			String ret = "0";
+			try {
+				ret = CustomHttpClient.executeHttpPost(HTTP_POST_URL, postParameters).toString();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			if (ret.startsWith("-1")) {
+				return false;
+			} else {
+
+				return true;
+			}
+
+		}
+
+	}
+
+	public static class Media {
+		private static final String TAG = Media.class.getSimpleName();
 
 		public static boolean pushRecordToBackEnd(Context context, com.dabeshackers.infor.gather.entities.Media record) {
 			Log.d(TAG, "pushRecordToBackEnd() method invoked!");

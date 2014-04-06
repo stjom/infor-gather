@@ -38,6 +38,12 @@ public class WebServiceUrls {
 		public static final String CLEAR_BY_GATHERING_ID = "http://codesndbx.com/android/inforgather/media_clear_by_gathering_id.php";
 	}
 
+	public static class Attachments {
+		public static final String PUSH_RECORD = "http://codesndbx.com/android/inforgather/attachment_write.php";
+		public static final String SELECT_BY_GATHERING_ID = "http://codesndbx.com/android/inforgather/attachment_select_by_gathering_id.php";
+		public static final String DELETE_RECORD_BY_ID = "http://codesndbx.com/android/inforgather/attachment_delete_by_id.php";
+	}
+
 	public static class Tags {
 		public static final String PUSH_RECORD = "http://codesndbx.com/android/inforgather/tags_insert_update.php";
 		public static final String PUSH_RECORD_TO_INFOR_DISCUSS = "http://codesndbx.com/android/infordiscuss/tags_insert_update.php";

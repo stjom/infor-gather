@@ -22,7 +22,7 @@ public class MediaCaptureHelper {
 	public static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
 	public static final int CAMERA_CAPTURE_VIDEO_REQUEST_CODE = 200;
 	public static final int GALLERY_PICK_IMAGE_REQUEST_CODE = 300;
-	public static final int ANY_PICK_IMAGE_REQUEST_CODE = 400;
+	public static final int PICKER_ANY_FILE_REQUEST_CODE = 400;
 
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
@@ -79,7 +79,7 @@ public class MediaCaptureHelper {
 
 		// start the image picker Intent
 		//		((Activity) context).startActivityForResult(intent, ANY_PICK_IMAGE_REQUEST_CODE);
-		((Activity) context).startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), ANY_PICK_IMAGE_REQUEST_CODE);
+		((Activity) context).startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), PICKER_ANY_FILE_REQUEST_CODE);
 
 		return fileUri;
 	}

@@ -1,6 +1,5 @@
 package com.dabeshackers.infor.gather.helpers;
 
-import com.dabeshackers.infor.gather.R;
 import it.sauronsoftware.ftp4j.FTPAbortedException;
 import it.sauronsoftware.ftp4j.FTPClient;
 import it.sauronsoftware.ftp4j.FTPDataTransferException;
@@ -16,6 +15,8 @@ import java.util.List;
 
 import android.content.Context;
 import android.util.Log;
+
+import com.dabeshackers.infor.gather.R;
 
 public class FtpHelper {
 
@@ -153,6 +154,48 @@ public class FtpHelper {
 			e.printStackTrace();
 		}
 		f.deleteDirectory(FTPDirectory);
+
+		if (f.isConnected()) {
+			f.disconnect(true);
+		}
+
+	}
+
+	public static void deleteFiles(Context context, List<File> files, String FTPDirectory) throws IllegalStateException, IOException, FTPIllegalReplyException, FTPException, FTPDataTransferException, FTPAbortedException {
+		FTPClient f = new FTPClient();
+		String host = context.getResources().getString(R.string.ftp_host);
+		String user = context.getResources().getString(R.string.ftp_user);
+		String password = context.getResources().getString(R.string.ftp_pass);
+		int port = Integer.parseInt(context.getResources().getString(R.string.ftp_port));
+
+		//File edited uploading to FTP
+		f.setPassive(true);
+
+		f.connect(host, port);
+
+		f.login(user, password);
+
+		try {
+			f.createDirectory(FTPDirectory);
+		} catch (FTPException e) {
+			//Print exception except 550 -> Directory exists
+			if (e.getCode() != 550) {
+				e.printStackTrace();
+			}
+		}
+
+		f.changeDirectory(FTPDirectory);
+
+		for (File file : files) {
+			Log.v("FTP Upload", FTPDirectory + file.getName());
+			f.setType(FTPClient.TYPE_BINARY);
+
+			try {
+				f.deleteFile(file.getName());
+			} catch (Exception e) {
+			}
+
+		}
 
 		if (f.isConnected()) {
 			f.disconnect(true);
