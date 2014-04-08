@@ -431,35 +431,56 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 		host = (TabHost) findViewById(android.R.id.tabhost);
 		pager = (ViewPager) findViewById(R.id.pager);
 
+		View tabIndicator;
+		TextView title;
+
 		host.setup();
 		TabSpec spec = host.newTabSpec("tab1");
 		spec.setContent(R.id.tab1);
-		spec.setIndicator("Details");
+		tabIndicator = LayoutInflater.from(this).inflate(R.layout.apptheme_tab_indicator_holo, host.getTabWidget(), false);
+		title = (TextView) tabIndicator.findViewById(android.R.id.title);
+		title.setText("DETAILS");
+		spec.setIndicator(tabIndicator);
 		host.addTab(spec);
 
 		spec = host.newTabSpec("tab2");
 		spec.setContent(R.id.tab2);
-		spec.setIndicator("Youtube");
+		tabIndicator = LayoutInflater.from(this).inflate(R.layout.apptheme_tab_indicator_holo, host.getTabWidget(), false);
+		title = (TextView) tabIndicator.findViewById(android.R.id.title);
+		title.setText("VIDEO");
+		spec.setIndicator(tabIndicator);
 		host.addTab(spec);
 
 		spec = host.newTabSpec("tab3");
 		spec.setContent(R.id.tab3);
-		spec.setIndicator("Web");
+		tabIndicator = LayoutInflater.from(this).inflate(R.layout.apptheme_tab_indicator_holo, host.getTabWidget(), false);
+		title = (TextView) tabIndicator.findViewById(android.R.id.title);
+		title.setText("WEB");
+		spec.setIndicator(tabIndicator);
 		host.addTab(spec);
 
 		spec = host.newTabSpec("tab4");
 		spec.setContent(R.id.tab4);
-		spec.setIndicator("Programme");
+		tabIndicator = LayoutInflater.from(this).inflate(R.layout.apptheme_tab_indicator_holo, host.getTabWidget(), false);
+		title = (TextView) tabIndicator.findViewById(android.R.id.title);
+		title.setText("PROGRAMME");
+		spec.setIndicator(tabIndicator);
 		host.addTab(spec);
 
 		spec = host.newTabSpec("tab5");
 		spec.setContent(R.id.tab5);
-		spec.setIndicator("Attendees");
+		tabIndicator = LayoutInflater.from(this).inflate(R.layout.apptheme_tab_indicator_holo, host.getTabWidget(), false);
+		title = (TextView) tabIndicator.findViewById(android.R.id.title);
+		title.setText("ATTENDEES");
+		spec.setIndicator(tabIndicator);
 		host.addTab(spec);
 
 		spec = host.newTabSpec("tab6");
 		spec.setContent(R.id.tab6);
-		spec.setIndicator("Attachments");
+		tabIndicator = LayoutInflater.from(this).inflate(R.layout.apptheme_tab_indicator_holo, host.getTabWidget(), false);
+		title = (TextView) tabIndicator.findViewById(android.R.id.title);
+		title.setText("ATTACHMENTS");
+		spec.setIndicator(tabIndicator);
 		host.addTab(spec);
 
 		// pager.setAdapter(new MyPagerAdapter(ViewOfferActivity.this));

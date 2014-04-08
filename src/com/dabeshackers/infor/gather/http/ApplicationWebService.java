@@ -737,12 +737,11 @@ public class ApplicationWebService {
 			boolean isFtpUploadFailed = false;
 			String ftpDir = ApplicationUtils.FTP_ROOT_FILES_URL + record.getId() + "/";
 
-			List<File> files = new ArrayList<File>();
-			File f = new File(record.getLocalFilePath());
-			files.add(f);
+			List<String> fileNames = new ArrayList<String>();
+			fileNames.add(record.getName());
 			Log.d(TAG, "deleting file...");
 			try {
-				FtpHelper.deleteFiles(context, files, ftpDir);
+				FtpHelper.deleteFiles(context, fileNames, ftpDir);
 			} catch (IllegalStateException e1) {
 				e1.printStackTrace();
 				isFtpUploadFailed = true;

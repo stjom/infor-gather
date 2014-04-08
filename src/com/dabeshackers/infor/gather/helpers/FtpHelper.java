@@ -161,7 +161,7 @@ public class FtpHelper {
 
 	}
 
-	public static void deleteFiles(Context context, List<File> files, String FTPDirectory) throws IllegalStateException, IOException, FTPIllegalReplyException, FTPException, FTPDataTransferException, FTPAbortedException {
+	public static void deleteFiles(Context context, List<String> fileNames, String FTPDirectory) throws IllegalStateException, IOException, FTPIllegalReplyException, FTPException, FTPDataTransferException, FTPAbortedException {
 		FTPClient f = new FTPClient();
 		String host = context.getResources().getString(R.string.ftp_host);
 		String user = context.getResources().getString(R.string.ftp_user);
@@ -186,12 +186,12 @@ public class FtpHelper {
 
 		f.changeDirectory(FTPDirectory);
 
-		for (File file : files) {
-			Log.v("FTP Upload", FTPDirectory + file.getName());
+		for (String filename : fileNames) {
+			Log.v("FTP Delete: ", FTPDirectory + filename);
 			f.setType(FTPClient.TYPE_BINARY);
 
 			try {
-				f.deleteFile(file.getName());
+				f.deleteFile(filename);
 			} catch (Exception e) {
 			}
 
