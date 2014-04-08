@@ -28,7 +28,7 @@
                 android:layout_height="60dip"
                 android:background="@drawable/app_theme_top_border"
                 android:gravity="right|center_vertical" >
-                
+
                 <ImageButton
                     android:id="@+id/img_visibility"
                     style="?android:attr/borderlessButtonStyle"
@@ -57,7 +57,7 @@
                     android:layout_margin="10dip"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_ask" />
+                    android:src="@drawable/ic_infordiscuss" />
 
                 <ImageButton
                     android:id="@+id/share"
@@ -232,10 +232,17 @@
                         android:layout_height="match_parent"
                         android:visibility="gone" >
 
-                        <com.google.android.youtube.player.YouTubePlayerView
-                            android:id="@+id/youtube_view"
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                            android:background="@color/black" >
+
+                            <com.google.android.youtube.player.YouTubePlayerView
+                                android:id="@+id/youtube_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_centerVertical="true" />
+                        </RelativeLayout>
                     </FrameLayout>
 
                     <FrameLayout
@@ -433,7 +440,7 @@
                             </LinearLayout>
                         </ScrollView>
                     </FrameLayout>
-                    
+
                     <FrameLayout
                         android:id="@+id/tab6"
                         android:layout_width="match_parent"
