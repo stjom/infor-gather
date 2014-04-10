@@ -39,10 +39,65 @@
                 android:lines="1"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/med_gray"
+                android:textStyle="italic" 
+                android:layout_below="@id/b2"
+                android:text="Gathering Title"/>
+            
+            <TextView
+                android:id="@+id/gathering_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/med_gray"
                 android:textStyle="italic" 
-                android:layout_below="@id/b2"/>
+                android:layout_below="@id/gathering_name"
+                android:text="Gathering subtitle"/>
+            
+              <TextView
+                android:id="@+id/gathering_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/med_gray"
+                android:textStyle="italic" 
+                android:layout_below="@id/gathering_subtitle"
+                android:text="Gathering date"/>
+              
+         <!--   <TextView
+                android:id="@+id/gathering_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/med_gray"
+                android:textStyle="italic" 
+                android:layout_below="@id/gathering_date"
+                android:text="Gathering status"/>-->
             
            <TextView
                 android:layout_width="wrap_content"
@@ -57,9 +112,9 @@
                 android:scrollHorizontally="true"
                 android:text="Attend as:"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/med_gray"
+                android:textColor="@color/dark_gray"
                 android:textStyle="italic"
-                android:layout_below="@id/gathering_name"
+                android:layout_below="@id/gathering_date"
                 android:id="@+id/attendas" />
 
             <EditText
@@ -76,6 +131,20 @@
                 android:textColor="@color/black"
                 android:textColorHint="@color/med_gray" 
                 android:layout_below="@id/attendas"/>
+            
+            <Spinner
+        		android:id="@+id/spinner_status"
+        		 android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
+                android:paddingLeft="10dp"
+        		android:layout_below="@id/attendee_fullname"
+        		android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/black"
+                android:textColorHint="@color/med_gray" />
+ 
 
 
 </RelativeLayout>

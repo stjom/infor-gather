@@ -888,12 +888,10 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			attendeeStatus.setText(item.getStatus());
 			
 			//TODO set permissions based on user-created
-			//if (currentUser.getId().equals(item.get))
+			//if (currentUser.getId().equals(item.getId()));
 
-			/*final Button overflow = (Button) convertView.findViewById(R.id.overflow);
-			final TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
+			final Button overflow = (Button) convertView.findViewById(R.id.attendee_overflow);
 
-			txtTitle.setText(item.getTitle());
 			if (currentUser.getId().equals(item.getEdited_by())) {
 				//Show overflow
 				overflow.setVisibility(View.VISIBLE);
@@ -902,31 +900,17 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 				overflow.setVisibility(View.GONE);
 			}
 
-			final PopupMenu popup = new PopupMenu(GatheringViewActivity.this, overflow);
+			final PopupMenu popup = new PopupMenu(GatheringViewActivity.this, convertView.findViewById(R.id.attendee_overflow));
 			//set overflow options
-			popup.getMenuInflater().inflate(R.menu.schedule_list_overflow_menu, popup.getMenu());
+			popup.getMenuInflater().inflate(R.menu.attendee_list_overflow, popup.getMenu());
 			popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 				@Override
 				public boolean onMenuItemClick(android.view.MenuItem menu) {
 					switch (menu.getItemId()) {
 
-					case R.id.menu_edit:
-						editSchedule(item);
-
-						break;
-
-					case R.id.menu_delete:
-						AlertDialog.Builder alert = new AlertDialog.Builder(GatheringViewActivity.this);
-						alert.setTitle("Confirm removal");
-						alert.setMessage("Are you sure that you want to delete this entry?");
-						alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								deleteSchedule(item);
-							}
-						});
-						alert.setIcon(android.R.drawable.ic_dialog_alert);
-						alert.show();
+					case R.id.attendee_menu_edit:
+						editAttendee(item);
 						break;
 
 					default:
@@ -943,7 +927,7 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 				public void onClick(View v) {
 					popup.show();
 				}
-			});*/
+			});
 
 			return convertView;
 		}
@@ -1025,6 +1009,12 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 		Intent intent = new Intent(GatheringViewActivity.this, ScheduleWriteActivity.class);
 		intent.putExtra("item", schedule);
 		startActivityForResult(intent, ScheduleWriteActivity.NEW_REQUEST_CODE);
+	}
+	
+	private void editAttendee(Attendee attendee) {
+		Intent intent = new Intent(GatheringViewActivity.this, AttendeesWriteActivity.class);
+		intent.putExtra("attendee", attendee);
+		startActivityForResult(intent, AttendeesWriteActivity.NEW_REQUEST_CODE);
 	}
 
 	private void deleteSchedule(final Schedule schedule) {

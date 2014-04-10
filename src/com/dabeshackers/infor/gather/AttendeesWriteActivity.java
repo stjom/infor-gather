@@ -1,13 +1,20 @@
 package com.dabeshackers.infor.gather;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.net.wifi.WifiConfiguration.Status;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,14 +33,16 @@ import com.kpbird.chipsedittextlibrary.ChipsMultiAutoCompleteTextview;
 public class AttendeesWriteActivity extends SherlockActivity {
 
 	public static final int NEW_REQUEST_CODE = 10003;
+	
+	final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.ENGLISH);
 
-	private enum DateTimePickerType {
-		FROM, TO
-	}
 
 	private EditText fullName;
 	private TextView gatheringTitle;
-	//TODO private Spinner choices;
+	private TextView gatheringSubtitle;
+	private TextView gatheringDate;
+//	private TextView gatheringStatus;
+	private Spinner spinnerAttendanceStatus;
 
 	ChipsMultiAutoCompleteTextview ch;
 	ChipsAdapter chipsAdapter;
@@ -66,9 +75,16 @@ public class AttendeesWriteActivity extends SherlockActivity {
 		if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().containsKey("gathering")) {
 			currentGathering = (Gathering) getIntent().getExtras().getSerializable("gathering");
 		}
+		
+		if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().containsKey("attendee")) {
+			currentItem = (Attendee) getIntent().getExtras().getSerializable("attendee");
+		}
 
 		fullName = (EditText) findViewById(R.id.attendee_fullname);
 		gatheringTitle = (TextView) findViewById(R.id.gathering_name);
+		gatheringSubtitle = (TextView) findViewById(R.id.gathering_subtitle);
+		gatheringDate = (TextView) findViewById(R.id.gathering_date);
+//		gatheringStatus = (TextView) findViewById(R.id.gathering_status);
 
 		currentUser = appMain.getCurrentUser();
 
@@ -80,9 +96,30 @@ public class AttendeesWriteActivity extends SherlockActivity {
 	}
 
 	private void populateFieldsForEditing() {
-		String fullNameString = currentUser.getFirstName() + " " + currentUser.getLastName();
-		fullName.setText(fullNameString);
+		if (currentItem == null) {
+			String fullNameString = currentUser.getFirstName() + " " + currentUser.getLastName();
+			fullName.setText(fullNameString);
+		} else {
+			fullName.setText(currentItem.getFullname());
+		}
+	//	gatheringStatus.setText(currentGathering.getStatus());
 		gatheringTitle.setText(currentGathering.getTitle());
+		gatheringSubtitle.setText(currentGathering.getSubtitle());
+		String date = "From " + df.format(currentGathering.getDatefrom())
+				+ " to " + df.format(currentGathering.getDateto());
+		gatheringDate.setText(date);
+		
+		
+		/*spinner*/
+		spinnerAttendanceStatus = (Spinner) findViewById(R.id.spinner_status);
+		List<String> list = new ArrayList<String>();
+		list.add(Attendee.STATUS_RESERVED);
+		list.add(Attendee.STATUS_CONFIRMED);
+		list.add(Attendee.STATUS_CANCELLED);
+		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+			android.R.layout.simple_spinner_item, list);
+		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinnerAttendanceStatus.setAdapter(dataAdapter);
 
 	}
 
@@ -158,6 +195,7 @@ public class AttendeesWriteActivity extends SherlockActivity {
 					}
 
 					currentItem.setFullname(fullName.getText().toString());
+					currentItem.setStatus(spinnerAttendanceStatus.getSelectedItem().toString());
 					//TODO status, time attended
 				
 
