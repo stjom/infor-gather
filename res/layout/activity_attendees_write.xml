@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/app_theme_gradient_off_white"
+    android:orientation="vertical"
+    android:weightSum="100" >
+
+        <Button
+            android:id="@+id/b1"
+            android:layout_width="0dip"
+            android:layout_height="50dip"
+            android:layout_margin="5dip"
+            android:layout_weight="50"
+            android:text="@string/proceed"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/app_theme_dark_gray" />
+
+        <Button
+            android:id="@+id/b2"
+            android:layout_width="0dip"
+            android:layout_height="50dip"
+            android:layout_margin="5dip"
+            android:layout_weight="50"
+            android:text="@string/cancel"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/app_theme_dark_gray" />
+
+
+            <TextView
+                android:id="@+id/gathering_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/med_gray"
+                android:textStyle="italic" 
+                android:layout_below="@id/b2"/>
+            
+           <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:text="Attend as:"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/med_gray"
+                android:textStyle="italic"
+                android:layout_below="@id/gathering_name"
+                android:id="@+id/attendas" />
+
+            <EditText
+                android:id="@+id/attendee_fullname"
+                android:layout_width="fill_parent"
+                android:layout_height="40dip"
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
+                android:paddingLeft="10dp"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/black"
+                android:textColorHint="@color/med_gray" 
+                android:layout_below="@id/attendas"/>
+
+
+</RelativeLayout>

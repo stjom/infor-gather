@@ -94,6 +94,7 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 	List<Schedule> schedules;
 	ScheduleAdapter scheduleAdapter;
 	AttachmentAdapter attachmentAdapter;
+	AttendeesAdapter attendeesAdapter;
 
 	List<Attendee> attendees;
 
@@ -214,6 +215,19 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			retrieveSchedules();
 			retrieveAttendees();
 			retrieveAttachments();
+			
+			reserve.setVisibility(View.VISIBLE);
+			reserve.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(GatheringViewActivity.this, AttendeesWriteActivity.class);
+					intent.putExtra("gathering", item);
+					startActivityForResult(intent, AttendeesWriteActivity.NEW_REQUEST_CODE);
+					//Toast.makeText(GatheringViewActivity.this, "Clicked Reserve", Toast.LENGTH_SHORT).show();
+				}
+			});
+
 
 			if (currentUser.getId().equals(item.getEdited_by())) {
 				programme.setVisibility(View.VISIBLE);
@@ -369,6 +383,29 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 	}
 
 	private void retrieveAttendees() {
+		attendeesView = (ListView) findViewById(R.id.attendees);
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				attendees = ApplicationWebService.Attendees.fetchRecordsByGatheringId(GatheringViewActivity.this, item.getId());
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						if (attendees != null && attendees.size() > 0) {
+							attendeesAdapter = new AttendeesAdapter(GatheringViewActivity.this, R.layout.attendees_list, attendees);
+							attendeesView.setAdapter(attendeesAdapter);
+						} else {
+							attendeesView.setAdapter(null);
+						}
+					}
+
+				});
+
+			}
+
+		}).start();
 	}
 
 	private void retrieveSchedules() {
@@ -826,6 +863,92 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 		}
 	}
 
+	
+	public class AttendeesAdapter extends ArrayAdapter<Attendee> {
+
+		List<Attendee> objects;
+
+		public AttendeesAdapter(Context context, int textViewResourceId, List<Attendee> objects) {
+			super(context, textViewResourceId, objects);
+			this.objects = objects;
+		}
+
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+
+			LayoutInflater inflater = getLayoutInflater();
+
+			final Attendee item = objects.get(position);
+
+			convertView = inflater.inflate(R.layout.attendees_list, parent, false);
+			
+			final TextView attendeeName = (TextView) convertView.findViewById(R.id.attendee_name);
+			final TextView attendeeStatus = (TextView) convertView.findViewById(R.id.attendee_status);
+			attendeeName.setText(item.getFullname());
+			attendeeStatus.setText(item.getStatus());
+			
+			//TODO set permissions based on user-created
+			//if (currentUser.getId().equals(item.get))
+
+			/*final Button overflow = (Button) convertView.findViewById(R.id.overflow);
+			final TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
+
+			txtTitle.setText(item.getTitle());
+			if (currentUser.getId().equals(item.getEdited_by())) {
+				//Show overflow
+				overflow.setVisibility(View.VISIBLE);
+			} else {
+				//Hide overflow
+				overflow.setVisibility(View.GONE);
+			}
+
+			final PopupMenu popup = new PopupMenu(GatheringViewActivity.this, overflow);
+			//set overflow options
+			popup.getMenuInflater().inflate(R.menu.schedule_list_overflow_menu, popup.getMenu());
+			popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+				@Override
+				public boolean onMenuItemClick(android.view.MenuItem menu) {
+					switch (menu.getItemId()) {
+
+					case R.id.menu_edit:
+						editSchedule(item);
+
+						break;
+
+					case R.id.menu_delete:
+						AlertDialog.Builder alert = new AlertDialog.Builder(GatheringViewActivity.this);
+						alert.setTitle("Confirm removal");
+						alert.setMessage("Are you sure that you want to delete this entry?");
+						alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								deleteSchedule(item);
+							}
+						});
+						alert.setIcon(android.R.drawable.ic_dialog_alert);
+						alert.show();
+						break;
+
+					default:
+						break;
+					}
+
+					return true;
+				}
+
+			});
+
+			overflow.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					popup.show();
+				}
+			});*/
+
+			return convertView;
+		}
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);

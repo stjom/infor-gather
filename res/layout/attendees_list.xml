@@ -1,14 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/app_theme_card_ui"
+    android:orientation="horizontal"
+    android:paddingBottom="20dip"
+    android:paddingTop="5dip" >
+
+    <!-- ListRow Left sied Thumbnail image -->
+
+
+    <!-- Title Of Document -->
+
+    <TextView
+        android:id="@+id/attendee_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dip"
+        android:layout_marginLeft="20dip"
+        android:layout_marginTop="15dip"
+        android:singleLine="true"
+        android:text="TLDV Member A"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/med_gray"
+        android:textStyle="bold" />
+
+    <!-- <Button
+        android:id="@+id/overflow"
+        android:layout_width="25dip"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/venue"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="4dip"
+        android:layout_marginRight="20dip"
+        android:layout_marginTop="15dip"
+        android:background="@drawable/app_theme_list_overflow_button"
+        android:visibility="gone" />-->
+
+    <TextView
+        android:id="@+id/attendee_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/attendee_name"
+        android:layout_marginBottom="4dip"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:text="Reserved"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/med_gray" />
+</RelativeLayout>
+
+
+
+
+
+
+
+
+
+
+  <!-- Edittext with clear button -->
+
+
+    <!-- Edittext with clear button --><!-- <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:weightSum="10" >
 
-    <!-- Edittext with clear button -->
-
-
-    <!-- Edittext with clear button -->
 
     <com.markupartist.android.widget.PullToRefreshListView
         android:id="@+id/android:list"
@@ -35,4 +95,4 @@
         android:text="No items found"
         android:textColor="@color/dark_gray" />
 
-</LinearLayout>
+</LinearLayout>-->

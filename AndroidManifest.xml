@@ -107,6 +107,11 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="New Schedule Entry" >
         </activity>
+       <activity
+            android:name="com.dabeshackers.infor.gather.AttendeesWriteActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="New Attendee Entry" >
+        </activity>
         <activity
             android:name="com.dabeshackers.infor.gather.EditUserActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
