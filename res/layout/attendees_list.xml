@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/app_theme_card_ui"
     android:orientation="horizontal"
     android:paddingBottom="20dip"
-    android:paddingTop="5dip">
+    android:paddingTop="5dip" >
+
 
     <!-- ListRow Left sied Thumbnail image -->
 
 
     <!-- Title Of Document -->
-
-
-    <TextView
-        android:id="@+id/attendee_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dip"
-        android:layout_marginLeft="20dip"
-        android:layout_marginTop="15dip"
-		android:layout_toLeftOf="@+id/attendee_overflow"
-        android:singleLine="true"
-        android:text="TLDV Member A"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/med_gray"
-        android:textStyle="bold" />
 
     <!-- <Button
         android:id="@+id/overflow"
@@ -39,27 +25,40 @@
         android:background="@drawable/app_theme_list_overflow_button"
         android:visibility="gone" />-->
 
-    <TextView
-        android:id="@+id/attendee_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/attendee_name"
-        android:layout_marginRight="19dp"
-        android:text="Reserved"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/med_gray" />
+     <TextView
+         android:id="@+id/attendee_name"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentTop="true"
+         android:layout_marginLeft="17dp"
+         android:layout_marginTop="16dp"
+         android:singleLine="true"
+         android:text="TLDV Member A"
+         android:textAppearance="?android:attr/textAppearanceMedium"
+         android:textColor="@color/med_gray"
+         android:textStyle="bold" />
+
+     <TextView
+         android:id="@+id/attendee_status"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginLeft="17dp"
+         android:layout_below="@+id/attendee_overflow"
+         android:text="Reserved"
+         android:textAppearance="?android:attr/textAppearanceSmall"
+         android:textColor="@color/med_gray" />
+
      <Button
-        android:id="@+id/attendee_overflow"
-        android:layout_width="25dip"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/attendee_name"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="4dip"
-        android:layout_marginRight="20dip"
-        android:layout_marginTop="15dip"
-        android:background="@drawable/app_theme_list_overflow_button"
-        android:visibility="gone" />
+         android:id="@+id/attendee_overflow"
+         android:layout_width="25dip"
+         android:layout_height="wrap_content"
+         android:layout_alignBottom="@+id/attendee_name"
+         android:layout_alignParentRight="true"
+         android:layout_alignTop="@+id/attendee_name"
+         android:layout_marginRight="17dp"
+         android:background="@drawable/app_theme_list_overflow_button" />
+
 </RelativeLayout>
 
 

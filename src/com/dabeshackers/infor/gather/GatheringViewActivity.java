@@ -97,6 +97,7 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 	AttendeesAdapter attendeesAdapter;
 
 	List<Attendee> attendees;
+	Attendee currentAttendee;
 
 	ImageView img, share, navigate;
 	ImageButton img_visibility, confirm_attendance, ask_question;
@@ -120,6 +121,8 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 
 	AppMain appMain;
 	private User currentUser;
+	
+	boolean hasReserved;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -216,18 +219,8 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			retrieveAttendees();
 			retrieveAttachments();
 			
-			reserve.setVisibility(View.VISIBLE);
-			reserve.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(GatheringViewActivity.this, AttendeesWriteActivity.class);
-					intent.putExtra("gathering", item);
-					startActivityForResult(intent, AttendeesWriteActivity.NEW_REQUEST_CODE);
-					//Toast.makeText(GatheringViewActivity.this, "Clicked Reserve", Toast.LENGTH_SHORT).show();
-				}
-			});
-
+		
+			
 
 			if (currentUser.getId().equals(item.getEdited_by())) {
 				programme.setVisibility(View.VISIBLE);
@@ -396,6 +389,37 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 						if (attendees != null && attendees.size() > 0) {
 							attendeesAdapter = new AttendeesAdapter(GatheringViewActivity.this, R.layout.attendees_list, attendees);
 							attendeesView.setAdapter(attendeesAdapter);
+							
+							if (currentUser!=null && attendees !=null && !attendees.isEmpty()) {
+								for (Attendee thisAttendee: attendees) {
+									if (thisAttendee.getFullname().contains(currentUser.getFirstName()) 
+											&& thisAttendee.getFullname().contains(currentUser.getLastName())) {
+										currentAttendee = thisAttendee;
+										hasReserved = true;
+										break;
+									}
+								}
+							} else {
+								//reserve.setVisibility(View.INVISIBLE);
+								reserve.setVisibility(View.GONE);
+							}
+							
+							
+							if (hasReserved) {
+								reserve.setVisibility(View.GONE);
+							} else {
+								reserve.setVisibility(View.VISIBLE);
+								reserve.setOnClickListener(new OnClickListener() {
+
+									@Override
+									public void onClick(View v) {
+										Intent intent = new Intent(GatheringViewActivity.this, AttendeesWriteActivity.class);
+										intent.putExtra("gathering", item);
+										startActivityForResult(intent, AttendeesWriteActivity.NEW_REQUEST_CODE);
+										//Toast.makeText(GatheringViewActivity.this, "Clicked Reserve", Toast.LENGTH_SHORT).show();
+									}
+								});
+							}                                                                                                                                         
 						} else {
 							attendeesView.setAdapter(null);
 						}
@@ -890,9 +914,9 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			//TODO set permissions based on user-created
 			//if (currentUser.getId().equals(item.getId()));
 
-			final Button overflow = (Button) convertView.findViewById(R.id.attendee_overflow);
+			//Button overflow = (Button) convertView.findViewById(R.id.attendee_overflow);
 
-			if (currentUser.getId().equals(item.getEdited_by())) {
+			/*if (currentUser.getId().equals(item.getEdited_by())) {
 				//Show overflow
 				overflow.setVisibility(View.VISIBLE);
 			} else {
@@ -927,7 +951,7 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 				public void onClick(View v) {
 					popup.show();
 				}
-			});
+			});*/
 
 			return convertView;
 		}
@@ -951,6 +975,11 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 					//					initiatePaymentPreparation(result);
 					Log.v(TAG, "Update attendance status here... " + result);
 					ToastHelper.toast(GatheringViewActivity.this, "Attendance confirmed.", Toast.LENGTH_LONG);
+					currentAttendee.setStatus(Attendee.STATUS_ATTENDED);
+
+					updateAttendeeStatus(currentAttendee);
+					
+					
 				}
 
 			} else if (resultCode == Activity.RESULT_CANCELED) {
@@ -1030,6 +1059,19 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 
 	}
 
+	
+	private void updateAttendeeStatus(final Attendee attendee) {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				if (ApplicationWebService.Attendees.updateStatus(GatheringViewActivity.this, attendee)) {
+					retrieveAttendees();
+				}
+			}
+		}).start();
+
+	}
 	private void showProgressDialog(String title, String msg, boolean cancelable) {
 		pd = new ProgressDialog(GatheringViewActivity.this);
 		pd.setTitle(title);

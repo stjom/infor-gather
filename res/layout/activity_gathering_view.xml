@@ -410,14 +410,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
 
-                        <ScrollView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fillViewport="true"
-                            android:paddingBottom="10dip"
-                            android:paddingLeft="15dip"
-                            android:paddingRight="15dip"
-                            android:paddingTop="10dip" >
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -428,6 +420,7 @@
                                     android:id="@+id/reserve"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="16dip"
                                     android:layout_marginLeft="16dip"
                                     android:layout_marginRight="16dip"
                                     android:text="Reserve a seat"
@@ -436,9 +429,17 @@
                                 <ListView
                                     android:id="@+id/attendees"
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent" />
+	                                android:layout_height="match_parent"
+	                                android:layout_marginBottom="5dip"
+	                                android:layout_marginTop="16dip"
+	                                android:divider="@null"
+	                                android:dividerHeight="0dp"
+	                                android:fastScrollEnabled="false"
+	                                android:scrollbars="none"
+	                                android:smoothScrollbar="false"
+	                                android:stackFromBottom="false"
+	                                android:transcriptMode="disabled" />
                             </LinearLayout>
-                        </ScrollView>
                     </FrameLayout>
 
                     <FrameLayout
