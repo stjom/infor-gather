@@ -115,7 +115,6 @@ public class AttendeesWriteActivity extends SherlockActivity {
 		List<String> list = new ArrayList<String>();
 		list.add(Attendee.STATUS_RESERVED);
 		list.add(Attendee.STATUS_CONFIRMED);
-		list.add(Attendee.STATUS_CANCELLED);
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
 			android.R.layout.simple_spinner_item, list);
 		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

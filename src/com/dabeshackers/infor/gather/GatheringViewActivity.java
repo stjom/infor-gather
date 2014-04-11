@@ -220,7 +220,16 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			retrieveAttachments();
 			
 		
-			
+
+			reserve.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(GatheringViewActivity.this, AttendeesWriteActivity.class);
+					intent.putExtra("gathering", item);
+					startActivityForResult(intent, AttendeesWriteActivity.NEW_REQUEST_CODE);
+				}
+			});
 
 			if (currentUser.getId().equals(item.getEdited_by())) {
 				programme.setVisibility(View.VISIBLE);
@@ -389,6 +398,7 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 						if (attendees != null && attendees.size() > 0) {
 							attendeesAdapter = new AttendeesAdapter(GatheringViewActivity.this, R.layout.attendees_list, attendees);
 							attendeesView.setAdapter(attendeesAdapter);
+
 							
 							if (currentUser!=null && attendees !=null && !attendees.isEmpty()) {
 								for (Attendee thisAttendee: attendees) {
@@ -409,16 +419,6 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 								reserve.setVisibility(View.GONE);
 							} else {
 								reserve.setVisibility(View.VISIBLE);
-								reserve.setOnClickListener(new OnClickListener() {
-
-									@Override
-									public void onClick(View v) {
-										Intent intent = new Intent(GatheringViewActivity.this, AttendeesWriteActivity.class);
-										intent.putExtra("gathering", item);
-										startActivityForResult(intent, AttendeesWriteActivity.NEW_REQUEST_CODE);
-										//Toast.makeText(GatheringViewActivity.this, "Clicked Reserve", Toast.LENGTH_SHORT).show();
-									}
-								});
 							}                                                                                                                                         
 						} else {
 							attendeesView.setAdapter(null);
@@ -914,14 +914,14 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 			//TODO set permissions based on user-created
 			//if (currentUser.getId().equals(item.getId()));
 
-			//Button overflow = (Button) convertView.findViewById(R.id.attendee_overflow);
+			Button attendeesOverflow = (Button) convertView.findViewById(R.id.attendee_overflow);
 
-			/*if (currentUser.getId().equals(item.getEdited_by())) {
+			if (currentUser.getId().equals(item.getEdited_by())) {
 				//Show overflow
-				overflow.setVisibility(View.VISIBLE);
+				attendeesOverflow.setVisibility(View.VISIBLE);
 			} else {
 				//Hide overflow
-				overflow.setVisibility(View.GONE);
+				attendeesOverflow.setVisibility(View.GONE);
 			}
 
 			final PopupMenu popup = new PopupMenu(GatheringViewActivity.this, convertView.findViewById(R.id.attendee_overflow));
@@ -933,8 +933,9 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 				public boolean onMenuItemClick(android.view.MenuItem menu) {
 					switch (menu.getItemId()) {
 
-					case R.id.attendee_menu_edit:
-						editAttendee(item);
+					case R.id.attendee_menu_cancel:
+						currentAttendee.setStatus(Attendee.STATUS_CANCELLED);
+						updateAttendeeStatus(currentAttendee);
 						break;
 
 					default:
@@ -946,12 +947,12 @@ public class GatheringViewActivity extends YouTubeFailureRecoveryActivity implem
 
 			});
 
-			overflow.setOnClickListener(new OnClickListener() {
+			attendeesOverflow.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					popup.show();
 				}
-			});*/
+			});
 
 			return convertView;
 		}
